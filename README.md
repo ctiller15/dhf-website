@@ -2,7 +2,7 @@ DHF - A website to track fictional characters
 
 [Figma](https://www.figma.com/file/IdY8QLekrR0EpmGWH3A2aD/DHF_Site?node-id=0%3A1)
 
-[Database Diagram](#)
+[Database Diagram](https://lucid.app/lucidchart/76e43fbc-96b1-4c4f-8ab0-25a2b610cd84/view?page=0_0#)
 
 set up environment variables:
 `cp .env.example .env`
