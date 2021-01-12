@@ -9,4 +9,7 @@ set up environment variables:
 Edit the enviroment variables to correspond to your current environment.
 
 Run the tests:
+First ensure your postgres user can run the tests:
+`ALTER USER <username> CREATEDB;`
+
 `python manage.py test`
