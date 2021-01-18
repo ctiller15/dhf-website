@@ -50,3 +50,12 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_fuzzy_found.html')
+
+    def test_searching_exact_matches_renders_character_page(self):
+
+        Character.objects.create(name="Bojack Horseman")
+
+        response = self.client.get('/search?search_term=Bojack Horseman')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'character_page.html')
