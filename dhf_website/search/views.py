@@ -26,13 +26,5 @@ def home(request):
 
 def search(request):
 
-    #print("SEARCHING!!!")
     term = request.GET.get('search_term', None)
-    print(term)
     return search_character(request, term)
-
-    # Get character(s)
-
-
-
-    #return render(request, 'character_not_found.html', status=204)

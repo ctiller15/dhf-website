@@ -1,7 +1,10 @@
 from django.test import TestCase, Client
 from search.forms import SearchForm
+from characters.models import Character
 
 class HomePageTest(TestCase):
+    fixtures = ['f_status.json']
+
     def setUp(self):
         self.client = Client()
 
@@ -29,4 +32,12 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.templates[0].name, 'character_not_found.html')
 
-        raise Exception('Finish the test!')
+    def test_searching_multiple_characters_renders_multiple_found_view(self):
+
+        Character.objects.create(name="popeye")
+        Character.objects.create(name="popeye")
+
+        response = self.client.get('/search?search_term=popeye')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'character_multiple_found.html')
