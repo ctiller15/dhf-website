@@ -16,7 +16,7 @@ def search_character(request, term):
         else:
             return render(request, 'character_multiple_found.html', context={ 'results': exact_results })
     elif len(fuzzy_results) > 0:
-        return render(request, 'character_fuzzy_found', context={ 'results': fuzzy_results})
+        return render(request, 'character_fuzzy_found.html', context={ 'results': fuzzy_results})
     else:
         return render(request, 'character_not_found.html', status=204)
 

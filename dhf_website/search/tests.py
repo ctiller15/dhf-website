@@ -41,3 +41,12 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_multiple_found.html')
+
+    def test_searching_characters_without_exact_matches_renders_fuzzy_find_view(self):
+
+        Character.objects.create(name="popeye the sailor man")
+
+        response = self.client.get('/search?search_term=sailor')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'character_fuzzy_found.html')
