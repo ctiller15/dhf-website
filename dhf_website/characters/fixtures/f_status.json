@@ -1,0 +1,23 @@
+[
+	{
+		"model": "characters.F_Status",
+		"pk": 1,
+		"fields": {
+			"name": "yes"
+		}
+	},
+	{
+		"model": "characters.F_Status",
+		"pk": 2,
+		"fields": {
+			"name": "no"
+		}
+	},
+	{
+		"model": "characters.F_Status",
+		"pk": 3,
+		"fields": {
+			"name": "maybe"
+		}
+	}
+]

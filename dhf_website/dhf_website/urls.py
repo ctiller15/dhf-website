@@ -20,4 +20,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     url(r"^", include("users.urls")),
     path('admin/', admin.site.urls),
+    path('', include("search.urls"))
 ]
