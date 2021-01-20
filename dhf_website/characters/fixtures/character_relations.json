@@ -1,0 +1,21 @@
+[
+	{
+		"model": "characters.CharacterRelation",
+		"pk": 1,
+		"fields": {
+			"character_1": 1,
+			"character_2": 2,
+			"relation_summary": "Dick Grayson and Starfire have been dating for a very long time. They have a very healthy relationship."
+		}
+	},
+	{
+		"model": "characters.CharacterRelation",
+		"pk": 2,
+		"fields": {
+			"character_1": 1,
+			"character_2": 3,
+			"relation_summary": "Dick Grayson was tied to a bed once. He did it for gotham."
+		}
+	}
+
+]

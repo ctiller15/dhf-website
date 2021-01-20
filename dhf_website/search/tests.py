@@ -55,7 +55,7 @@ class HomePageTest(TestCase):
 
         Character.objects.create(name="Bojack Horseman")
 
-        response = self.client.get('/search?search_term=Bojack Horseman')
+        response = self.client.get('/search?search_term=Bojack Horseman', follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_page.html')

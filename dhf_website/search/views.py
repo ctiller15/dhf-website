@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.defaults import page_not_found
 from search.forms import SearchForm
 from characters.models import Character
@@ -12,7 +12,7 @@ def search_character(request, term):
 
     if len(exact_results) > 0:
         if len(exact_results) == 1:
-            return render(request, 'character_page.html', context={ 'results': exact_results })
+            return redirect(f'/characters/{term}/')
         else:
             return render(request, 'character_multiple_found.html', context={ 'results': exact_results })
     elif len(fuzzy_results) > 0:

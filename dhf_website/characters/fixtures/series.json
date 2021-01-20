@@ -1,0 +1,9 @@
+[
+	{
+		"model": "characters.Series",
+		"pk": 1,
+		"fields": {
+			"name": "Teen Titans"
+		}
+	}
+]

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ results.name }} {{ results.f_status_text }}</h2>
+
+<h3>Series: {{ results.series }}</h3>
+
+{% if results.f_status == "yes" %}
+	<h4>Relations</h4>
+
+	{% for relation in results.relations %}
+		<h5>{{ relation.character_name }}</h5>
+		<p>{{ relation.relation_summary }}</p>
+	{% endfor %}
+{% endif %}
+
+{% endblock %}

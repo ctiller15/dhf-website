@@ -1,0 +1,29 @@
+[
+	{
+		"model": "characters.Character",
+		"pk": 1,
+		"fields": {
+			"name": "Dick Grayson",
+			"f_status": 1,
+			"series": 1
+		}
+	},
+	{
+		"model": "characters.Character",
+		"pk": 2,
+		"fields": {
+			"name": "Starfire",
+			"f_status": 1,
+			"series": 1
+		}
+	},
+	{
+		"model": "characters.Character",
+		"pk": 3,
+		"fields": {
+			"name": "Harley Quinn",
+			"f_status": 1,
+			"series": 1
+		}
+	}
+]

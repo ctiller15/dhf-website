@@ -11,6 +11,9 @@ class F_Status(models.Model):
 
 DEFAULT_F_STATUS_ID = 1
 
+class Series(models.Model):
+    name = models.CharField(max_length=200)
+
 class Character(models.Model):
     # character_id PK
     name = models.CharField(max_length=200, blank=False, validators=[MinLengthValidator(1)])
@@ -18,6 +21,8 @@ class Character(models.Model):
     # imagePath CharField-300
     hidden = models.BooleanField(default=False)
     f_status = models.ForeignKey(F_Status, on_delete=models.DO_NOTHING, default=DEFAULT_F_STATUS_ID)
+    series = models.ForeignKey(Series, on_delete=models.DO_NOTHING, null=True)
+    relations = models.ManyToManyField("self", through='CharacterRelation')
 
     class Meta:
         constraints = [
@@ -26,3 +31,8 @@ class Character(models.Model):
                 name="%(app_label)s_%(class)s_name_length",
             )
         ]
+
+class CharacterRelation(models.Model):
+    character_1 = models.ForeignKey(Character, related_name="character_1", on_delete=models.CASCADE)
+    character_2 = models.ForeignKey(Character, related_name="character_2", null=True, on_delete=models.CASCADE)
+    relation_summary = models.CharField(max_length=2000)
