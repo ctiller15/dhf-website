@@ -15,4 +15,8 @@
 	{% endfor %}
 {% endif %}
 
+{% for reference in results.references %}
+	<p>{{ reference.text }}
+{% endfor %}
+
 {% endblock %}

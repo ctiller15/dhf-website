@@ -36,3 +36,7 @@ class CharacterRelation(models.Model):
     character_1 = models.ForeignKey(Character, related_name="character_1", on_delete=models.CASCADE)
     character_2 = models.ForeignKey(Character, related_name="character_2", null=True, on_delete=models.CASCADE)
     relation_summary = models.CharField(max_length=2000)
+
+class CharacterReference(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.DO_NOTHING)
+    text = models.CharField(max_length=200)

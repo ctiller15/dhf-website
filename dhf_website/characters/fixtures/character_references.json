@@ -1,0 +1,11 @@
+[
+	{
+		"model": "characters.CharacterReference",
+		"pk": 1,
+		"fields": {
+			"character": 1,
+			"text": "reference 1"
+		}
+	}
+]
+

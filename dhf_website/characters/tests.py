@@ -22,14 +22,13 @@ class CharacterModelTests(TestCase):
 
 class CharacterPageTests(TestCase):
 
-    fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json']
+    fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json', 'character_references']
 
     def setUp(self):
         self.client = Client()
 
     def test_character_page_loads_positive_data(self):
         response = self.client.get('/characters/Dick Grayson/')
-        print(response)
 
         response_content = str(response.content)
 
@@ -38,5 +37,5 @@ class CharacterPageTests(TestCase):
         self.assertIn('Teen Titans', response_content)
         self.assertIn('Starfire', response_content)
         self.assertIn('Harley Quinn', response_content)
+        self.assertIn('reference 1', response_content)
 
-        raise Exception('Finish the test!')
