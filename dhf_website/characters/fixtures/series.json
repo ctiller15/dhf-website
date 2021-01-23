@@ -5,5 +5,12 @@
 		"fields": {
 			"name": "Teen Titans"
 		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 2,
+		"fields": {
+			"name": "Batman"
+		}
 	}
 ]

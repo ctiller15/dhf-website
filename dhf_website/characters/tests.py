@@ -39,3 +39,30 @@ class CharacterPageTests(TestCase):
         self.assertIn('Harley Quinn', response_content)
         self.assertIn('reference 1', response_content)
 
+class CharacterCreationTests(TestCase):
+    fixtures = ['users.json']
+
+    def setUp(self):
+        self.client = Client()
+
+        self.character_data = {
+            'name': 'Barbara Gordon',
+            'f_status': 1,
+            'series': 2,
+            'relations': [
+                {
+                    'character_name': 'Dick Grayson',
+                    'character_id': 1,
+                    'summary': 'Barbara and Nightwing had a fling'
+                }
+            ]
+        }
+
+    def test_character_page_does_not_save_data_if_not_logged_in(self):
+
+        response = self.client.post(f'/characters/{self.character_data["name"]}/', self.character_data)
+        self.assertContains(response, 'Unauthorized', status_code=401)
+
+    def test_character_page_does_save_data_if_logged_in(self):
+
+        raise Exception('Finish the test!')
