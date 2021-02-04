@@ -47,11 +47,9 @@ def character_page(request, character_name):
     elif request.method == 'POST':
 
         if(request.user.is_authenticated):
-            print('Authenticated!')
+            return HttpResponse('Success', status=200)
+
         else:
-            print('Not authenticated! Can\'t do anything!!!')
             # convert to a class override?
             # Or simply redirect to the login page.
             return HttpResponse('Unauthorized', status=401)
-
-        print("Check me out!")

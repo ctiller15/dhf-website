@@ -65,4 +65,10 @@ class CharacterCreationTests(TestCase):
 
     def test_character_page_does_save_data_if_logged_in(self):
 
+        self.client.login(username='charcreationuser', password='dummyp@ss123')
+
+        response = self.client.post(f'/characters/{self.character_data["name"]}/', self.character_data)
+
+        self.assertContains(response, 'Success', status_code=200)
+
         raise Exception('Finish the test!')

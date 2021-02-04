@@ -25,11 +25,11 @@ class HomePageTest(TestCase):
         form = SearchForm(data)
         self.assertTrue(form.is_valid())
 
-    def test_searching_nonexistent_character_renders_404_view(self):
+    def test_searching_nonexistent_character_renders_not_found_view(self):
 
         response = self.client.get('/search?search_term=popeye')
 
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_not_found.html')
 
     def test_searching_multiple_characters_renders_multiple_found_view(self):
