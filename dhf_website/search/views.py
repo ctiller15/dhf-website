@@ -10,7 +10,6 @@ def search_character(request, term):
 
     total_results = list(chain(exact_results, fuzzy_results))
 
-    print('Trying to search!')
     if len(exact_results) > 0:
         if len(exact_results) == 1:
             return redirect(f'/characters/{term}/')
@@ -19,7 +18,6 @@ def search_character(request, term):
     elif len(fuzzy_results) > 0:
         return render(request, 'character_fuzzy_found.html', context={ 'results': fuzzy_results})
     else:
-        print('not found')
         return render(request, 'character_not_found.html', status=200)
 
 def home(request):

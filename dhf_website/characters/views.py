@@ -3,7 +3,8 @@ from django.forms.models import model_to_dict
 from django.shortcuts import render
 from characters.models import Character, CharacterRelation, CharacterReference
 from django.http import HttpResponse
-
+from django.contrib.auth.decorators import login_required
+from characters.forms import CharacterCreationForm, ReferenceForm, RelationForm
 
 def calculate_f_status_text(input_text):
     statuses = {
@@ -13,6 +14,23 @@ def calculate_f_status_text(input_text):
     }
 
     return statuses[input_text]
+
+@login_required
+def character_creation_page(request):
+    if request.method == 'GET':
+        form = CharacterCreationForm()
+        relations = RelationForm()
+        references = ReferenceForm()
+
+        context = {
+            'form': form,
+            'relations_form': relations,
+            'references_form': references,
+        }
+
+        return render(request, 'character_creation_page.html', context=context)
+    elif request.method == 'POST':
+        print('posting!')
 
 def character_page(request, character_name):
     if request.method == 'GET':
