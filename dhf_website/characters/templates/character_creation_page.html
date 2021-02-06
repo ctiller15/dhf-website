@@ -2,16 +2,30 @@
 
 {% block content %}
 	<p>This is a form to create a character!</p>
-	<form action="/characters/create/" method="post">
-	{% csrf_token %}
-	{{ form.as_p }}
+	<form id="new_character_form" action="/characters/create/" method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
 
-	<p>relations</p>
-	{{ relations_form.as_p }}
+		<p>relations</p>
 
-	<p>references</p>
-	{{ references_form.as_p }}
-	<input type="submit" value="submit">
+		{{ relations_form.management_form }}
+		{% for relation in relations_form %}
+			<div class="relation-form">
+				{{ relation.label_tag }}
+				{{ relation }}
+			</div>
+		{% endfor %}
+
+		<button 
+			type="button" 
+			id="add-relation-form">Add another relation</button>
+
+
+		<p>references</p>
+		{{ references_form.as_p }}
+		<input type="submit" value="submit">
 	</form>
 
+	{% load static %}
+	<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
