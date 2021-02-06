@@ -13,6 +13,7 @@
 			<div class="relation-form">
 				{{ relation.label_tag }}
 				{{ relation }}
+				<button type="button" class="delete-relation-form">Delete</button>
 			</div>
 		{% endfor %}
 
@@ -20,9 +21,21 @@
 			type="button" 
 			id="add-relation-form">Add another relation</button>
 
-
 		<p>references</p>
-		{{ references_form.as_p }}
+		{{ references_form.management_form }}
+		{% for reference in references_form %}
+			<div class="reference-form">
+				{{ reference.label_tag }}
+				{{ reference }}
+				<button type="button" class="delete-reference-form">Delete</button>
+			</div>
+		{% endfor %}
+
+		<button
+			type="button"
+			id="add-reference-form"
+			>Add another reference</button>
+
 		<input type="submit" value="submit">
 	</form>
 

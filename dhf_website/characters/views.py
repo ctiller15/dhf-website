@@ -5,6 +5,7 @@ from characters.models import Character, CharacterRelation, CharacterReference
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from characters.forms import CharacterCreationForm, ReferenceForm, RelationForm
+from django.forms import formset_factory
 
 def calculate_f_status_text(input_text):
     statuses = {
@@ -19,13 +20,13 @@ def calculate_f_status_text(input_text):
 def character_creation_page(request):
     if request.method == 'GET':
         form = CharacterCreationForm()
-        relations = RelationForm()
-        references = ReferenceForm()
+        RelationsFormSet = formset_factory(RelationForm)
+        ReferencesFormSet = formset_factory(ReferenceForm)
 
         context = {
             'form': form,
-            'relations_form': relations,
-            'references_form': references,
+            'relations_form': RelationsFormSet(prefix='relations-form'),
+            'references_form': ReferencesFormSet(prefix='references-form'),
         }
 
         return render(request, 'character_creation_page.html', context=context)
