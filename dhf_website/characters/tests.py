@@ -3,6 +3,7 @@ from django.core.exceptions import FieldError, ValidationError
 from django.db import transaction
 from django.db.utils import IntegrityError
 from characters.models import Character
+from characters.forms import CharacterCreationForm
 
 class CharacterModelTests(TestCase):
     fixtures = ['f_status.json']
@@ -58,6 +59,12 @@ class CharacterCreationTests(TestCase):
             ]
         }
 
+        self.valid_form_data = {
+            'character_name': 'Test Name', 
+            'character_series': 'Dummy series',
+            'f_status': 'Yes',
+        }
+
     def test_character_page_does_not_save_data_if_not_logged_in(self):
 
         response = self.client.post(f'/characters/{self.character_data["name"]}/', self.character_data)
@@ -72,3 +79,8 @@ class CharacterCreationTests(TestCase):
         self.assertContains(response, 'Success', status_code=200)
 
         raise Exception('Finish the test!')
+
+    def test_character_creation_form_validation(self):
+        test_form = CharacterCreationForm(self.valid_form_data)
+
+        self.assertTrue(test_form.is_valid())

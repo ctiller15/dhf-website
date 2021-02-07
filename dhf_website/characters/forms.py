@@ -12,4 +12,4 @@ class CharacterCreationForm(forms.Form):
     character_name = forms.CharField(label='Character name', max_length=200)
     character_series = forms.CharField(label='Character Series', max_length=200)
     f_status = forms.ChoiceField(choices=CHOICES)
-    summary = forms.CharField(max_length=500)
+    summary = forms.CharField(max_length=500, required=False)
