@@ -18,10 +18,10 @@ def calculate_f_status_text(input_text):
 
 @login_required
 def character_creation_page(request):
+    RelationsFormSet = formset_factory(RelationForm)
+    ReferencesFormSet = formset_factory(ReferenceForm)
     if request.method == 'GET':
         form = CharacterCreationForm()
-        RelationsFormSet = formset_factory(RelationForm)
-        ReferencesFormSet = formset_factory(ReferenceForm)
 
         context = {
             'form': form,
@@ -31,7 +31,17 @@ def character_creation_page(request):
 
         return render(request, 'character_creation_page.html', context=context)
     elif request.method == 'POST':
-        print('posting!')
+        character_creation_form = CharacterCreationForm(request.POST)
+        # save character
+        print(request.POST)
+        relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
+        references_formset = ReferencesFormSet(request.POST, prefix='references-form')
+
+        print(character_creation_form)
+        print(character_creation_form.cleaned_data)
+        print(relations_formset)
+        print(relations_formset.cleaned_data)
+        print(references_formset.cleaned_data)
 
 def character_page(request, character_name):
     if request.method == 'GET':

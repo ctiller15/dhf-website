@@ -25,7 +25,7 @@ addReferenceFormBtn.addEventListener("click", (evt) => {
 
 	characterForm.insertBefore(newReferenceForm, addReferenceFormBtn);
 
-	totalForms.setAttribute('value', `${referencesFormCount + 1}`);
+	totalReferenceForms.setAttribute('value', `${referencesFormCount + 1}`);
 });
 
 addRelationFormBtn.addEventListener("click", (evt) => {
