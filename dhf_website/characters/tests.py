@@ -59,11 +59,36 @@ class CharacterCreationTests(TestCase):
             ]
         }
 
-        self.valid_form_data = {
-            'character_name': 'Test Name', 
-            'character_series': 'Dummy series',
-            'f_status': 'Yes',
-        }
+        self.test_form_data = [
+            (
+                {
+                'character_name': 'Test Name', 
+                'character_series': 'Dummy series',
+                'f_status': 'Yes',
+                }, True,
+            ),
+            (
+                {
+                    'character_name': '',
+                    'character_series': 'New series',
+                    'f_status': 'Yes',
+                }, False
+            ),
+            (
+                {
+                    'character_name': 'Bojack',
+                    'character_series': '',
+                    'f_status': 'Yes',
+                }, False
+            ),
+            (
+                {
+                    'character_name': 'Wally West',
+                    'character_series': 'The flash',
+                    'f_status': 'RaggleFraggle',
+                }, False
+            ),
+        ]
 
     def test_character_page_does_not_save_data_if_not_logged_in(self):
 
@@ -81,6 +106,11 @@ class CharacterCreationTests(TestCase):
         raise Exception('Finish the test!')
 
     def test_character_creation_form_validation(self):
-        test_form = CharacterCreationForm(self.valid_form_data)
+        for data, assertion in self.test_form_data:
+            print(data)
+            with self.subTest():
 
-        self.assertTrue(test_form.is_valid())
+                test_form = CharacterCreationForm(data)
+                print(test_form)
+
+                self.assertEqual(test_form.is_valid(), assertion)

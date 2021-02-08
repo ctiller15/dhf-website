@@ -9,7 +9,7 @@ class ReferenceForm(forms.Form):
 
 class CharacterCreationForm(forms.Form):
     CHOICES = (('Yes', 'Yes'), ('No', 'No'), ('Maybe', 'Maybe'),)
-    character_name = forms.CharField(label='Character name', max_length=200)
-    character_series = forms.CharField(label='Character Series', max_length=200)
+    character_name = forms.CharField(label='Character name', max_length=200, min_length=0)
+    character_series = forms.CharField(label='Character Series', max_length=200, min_length=0)
     f_status = forms.ChoiceField(choices=CHOICES)
     summary = forms.CharField(max_length=500, required=False)
