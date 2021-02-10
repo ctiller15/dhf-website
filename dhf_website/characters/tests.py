@@ -41,22 +41,22 @@ class CharacterPageTests(TestCase):
         self.assertIn('reference 1', response_content)
 
 class CharacterCreationTests(TestCase):
-    fixtures = ['users.json']
+    fixtures = ['f_status.json', 'users.json']
 
     def setUp(self):
         self.client = Client()
 
         self.character_data = {
-            'name': 'Barbara Gordon',
+            'character_name': 'Barbara Gordon',
             'f_status': 1,
-            'series': 2,
-            'relations': [
-                {
-                    'character_name': 'Dick Grayson',
-                    'character_id': 1,
-                    'summary': 'Barbara and Nightwing had a fling'
-                }
-            ]
+            'character_series': 'Batman the animated series',
+            'relations-form-TOTAL_FORMS': 1,
+            'relations-form-INITIAL_FORMS': 0,
+            'relations-form-0-character_name': 'Dick Grayson',
+            'relations-form-0-summary': 'They had a fling',
+            'references-form-TOTAL_FORMS': 1,
+            'references-form-INITIAL_FORMS': 0,
+            'references-form-0-title': 'ref1'
         }
 
         self.test_form_data = [
@@ -64,21 +64,21 @@ class CharacterCreationTests(TestCase):
                 {
                 'character_name': 'Test Name', 
                 'character_series': 'Dummy series',
-                'f_status': 'Yes',
+                'f_status': 1,
                 }, True,
             ),
             (
                 {
                     'character_name': '',
                     'character_series': 'New series',
-                    'f_status': 'Yes',
+                    'f_status': 1,
                 }, False
             ),
             (
                 {
                     'character_name': 'Bojack',
                     'character_series': '',
-                    'f_status': 'Yes',
+                    'f_status': 1,
                 }, False
             ),
             (
@@ -92,25 +92,29 @@ class CharacterCreationTests(TestCase):
 
     def test_character_page_does_not_save_data_if_not_logged_in(self):
 
-        response = self.client.post(f'/characters/{self.character_data["name"]}/', self.character_data)
+        response = self.client.post(f'/characters/{self.character_data["character_name"]}/', self.character_data)
         self.assertContains(response, 'Unauthorized', status_code=401)
 
     def test_character_page_does_save_data_if_logged_in(self):
 
         self.client.login(username='charcreationuser', password='dummyp@ss123')
 
-        response = self.client.post(f'/characters/{self.character_data["name"]}/', self.character_data)
+        response = self.client.post(f'/characters/create/', self.character_data, follow=True)
 
-        self.assertContains(response, 'Success', status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'character_page.html')
 
-        raise Exception('Finish the test!')
+        response_str = str(response.content)
+        self.assertIn(self.character_data['character_name'], response_str)
+        self.assertIn(self.character_data['character_series'], response_str)
+        self.assertIn(self.character_data['relations-form-0-character_name'], response_str)
+        self.assertIn(self.character_data['relations-form-0-summary'], response_str)
+        self.assertIn(self.character_data['references-form-0-title'], response_str)
 
     def test_character_creation_form_validation(self):
         for data, assertion in self.test_form_data:
-            print(data)
             with self.subTest():
 
                 test_form = CharacterCreationForm(data)
-                print(test_form)
 
                 self.assertEqual(test_form.is_valid(), assertion)
