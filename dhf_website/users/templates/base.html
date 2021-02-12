@@ -1,12 +1,26 @@
-<style>
-	label, input {
-		display: block;
-	}
+<!DOCTYPE html>
 
-	span.helptext {
-		display: none;
-	}
-</style>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Does He fuck?</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
 
-{% block content %}
-{% endblock %}
+	<nav>
+		<section>
+			<a href="">Characters</a>
+			<a href="">Series</a>
+		</section>
+		<section>
+			<a href="{% url 'register' %}">Sign Up</a>
+			<a href="{% url 'login' %}">Log In</a>
+		</section>
+	</nav>
+
+	<body>
+		{% block content %}
+		{% endblock %}
+	</body>
+
+</html>

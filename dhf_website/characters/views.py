@@ -35,16 +35,13 @@ def character_creation_page(request):
         character_creation_form = CharacterCreationForm(request.POST)
         relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
         references_formset = ReferencesFormSet(request.POST, prefix='references-form')
-        print("Found it!!!")
             
         if(request.user.is_authenticated and character_creation_form.is_valid()):
 
             cleaned_character = character_creation_form.cleaned_data
-            print(cleaned_character)
             # Only run if series id is not given.
             char_series = Series.objects.create(name=cleaned_character['character_series'])
             found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
-            print(found_f_status)
 
             new_character = Character.objects.create(
                 name=cleaned_character['character_name'],
@@ -80,20 +77,20 @@ def character_page(request, character_name=None, character_id=None):
         if character_name:
             character = Character.objects \
                 .filter(name=character_name) \
-                .values('id', 'name', 'f_status__name', 'series__name') \
+                .values('id', 'name', 'f_status__name', 'series__name', 'summary') \
                 .first()
         elif character_id:
             character = Character.objects \
                 .filter(id=character_id) \
-                .values('id', 'name', 'f_status__name', 'series__name') \
+                .values('id', 'name', 'f_status__name', 'series__name', 'summary') \
                 .first()
 
         relations = ( CharacterRelation.objects \
             .filter(character_1__id=character['id']) \
             .values('relation_summary', character_name=F('character_2__name')) ) \
-        | (CharacterRelation.objects \
+            .union(CharacterRelation.objects \
            .filter(character_2__id=character['id']) \
-           .values('relation_summary', character_name=F('character_1__name')))
+                   .values('relation_summary', character_name=F('character_1__name')))
 
         references = CharacterReference.objects \
             .filter(character=character['id']) \
@@ -104,6 +101,7 @@ def character_page(request, character_name=None, character_id=None):
             'f_status_text': calculate_f_status_text(character['f_status__name']),
             'f_status': character['f_status__name'],
             'series': character['series__name'],
+            'summary': character['summary'],
             'relations': relations,
             'references': references,
         }

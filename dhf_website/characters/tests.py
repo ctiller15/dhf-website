@@ -50,6 +50,7 @@ class CharacterCreationTests(TestCase):
             'character_name': 'Barbara Gordon',
             'f_status': 1,
             'character_series': 'Batman the animated series',
+            'summary': 'Oracle. Also batgirl.',
             'relations-form-TOTAL_FORMS': 1,
             'relations-form-INITIAL_FORMS': 0,
             'relations-form-0-character_name': 'Dick Grayson',
@@ -107,6 +108,7 @@ class CharacterCreationTests(TestCase):
         response_str = str(response.content)
         self.assertIn(self.character_data['character_name'], response_str)
         self.assertIn(self.character_data['character_series'], response_str)
+        self.assertIn(self.character_data['summary'], response_str)
         self.assertIn(self.character_data['relations-form-0-character_name'], response_str)
         self.assertIn(self.character_data['relations-form-0-summary'], response_str)
         self.assertIn(self.character_data['references-form-0-title'], response_str)
