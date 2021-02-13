@@ -117,3 +117,9 @@ def character_page(request, character_name=None, character_id=None):
             # convert to a class override?
             # Or simply redirect to the login page.
             return HttpResponse('Unauthorized', status=401)
+
+def character_list(request):
+    if request.method == 'GET':
+        characters = Character.objects.all()
+
+        return render(request, 'character_list_page.html', context={ 'results': characters })

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{% for series in results %}
+	<a href='/series/id={{series.id}}'>{{ series.name }}</a>
+	{% endfor %}
+{% endblock %}

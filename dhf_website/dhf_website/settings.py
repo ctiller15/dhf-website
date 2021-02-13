@@ -34,6 +34,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(" ")
 
 INSTALLED_APPS = [
     "characters",
+    "series",
     "search",
     "users",
     "social_django",

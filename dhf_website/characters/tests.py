@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.core.exceptions import FieldError, ValidationError
 from django.db import transaction
 from django.db.utils import IntegrityError
-from characters.models import Character
+from characters.models import Character, Series
 from characters.forms import CharacterCreationForm
 
 class CharacterModelTests(TestCase):
@@ -39,6 +39,23 @@ class CharacterPageTests(TestCase):
         self.assertIn('Starfire', response_content)
         self.assertIn('Harley Quinn', response_content)
         self.assertIn('reference 1', response_content)
+
+class CharacterBrowserTests(TestCase):
+    fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json', 'character_references']
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_character_list_page_loads_all_characters(self):
+        response = self.client.get('/characters/list/')
+        response_str = str(response.content)
+
+        characters = Character.objects.all()
+
+        self.assertEqual(response.status_code, 200)
+
+        for character in characters:
+            self.assertIn(character.name, response_str)
 
 class CharacterCreationTests(TestCase):
     fixtures = ['f_status.json', 'users.json']
