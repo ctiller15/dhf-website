@@ -115,10 +115,12 @@ class CharacterCreationTests(TestCase):
 
     def test_character_page_does_save_data_if_logged_in(self):
 
+        seriesCountBefore = len(Series.objects.all())
         self.client.login(username='charcreationuser', password='dummyp@ss123')
 
         response = self.client.post(f'/characters/create/', self.character_data, follow=True)
 
+        self.assertEqual(seriesCountBefore + 1, len(Series.objects.all()))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_page.html')
 
