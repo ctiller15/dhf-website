@@ -1,7 +1,8 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.defaults import page_not_found
 from search.forms import SearchForm
-from characters.models import Character
+from characters.models import Character, Series
 from itertools import chain
 
 def search_character(request, term):
@@ -28,3 +29,13 @@ def search(request):
 
     term = request.GET.get('search_term', None)
     return search_character(request, term)
+
+def autocomplete_series(request):
+
+    search_text = request.GET.get('search_text', None).lower()
+
+    if request.method == 'GET':
+        series_list = Series.objects.filter(name__icontains=search_text)
+
+        updated_series_list = [{'name': series.name, 'id': series.id} for series in series_list]
+        return JsonResponse({ 'series': updated_series_list})

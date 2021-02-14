@@ -12,5 +12,47 @@
 		"fields": {
 			"name": "Batman"
 		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 3,
+		"fields": {
+			"name": "Bojack Horseman"
+		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 4,
+		"fields": {
+			"name": "Naruto"
+		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 5,
+		"fields": {
+			"name": "DragonBall"
+		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 6,
+		"fields": {
+			"name": "Bad Girls"
+		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 7,
+		"fields": {
+			"name": "Battlestar Galactica"
+		}
+	},
+	{
+		"model": "characters.Series",
+		"pk": 8,
+		"fields": {
+			"name": "Star Trek"
+		}
 	}
 ]

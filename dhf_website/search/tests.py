@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from search.forms import SearchForm
 from characters.models import Character
+import json
 
 class HomePageTest(TestCase):
     fixtures = ['f_status.json']
@@ -59,3 +60,20 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_page.html')
+
+class SearchAutocompleteTexts(TestCase):
+    fixtures = ['f_status.json', 'series.json']
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_search_series_autocomplete(self):
+        search_text = 'ba'
+
+        response = self.client.get(f'/autocomplete/series?search_text={search_text}')
+
+        response_content = json.loads(response.content)
+        self.assertGreater(len(response_content), 0)
+        
+        for payload in response_content['series']:
+            self.assertIn(search_text.lower(), payload['name'].lower())
