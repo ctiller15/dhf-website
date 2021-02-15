@@ -1,5 +1,8 @@
 // Code is very dry and repeated.
 // Look into consolidating into a few methods when time permits.
+const webPrefix = window.location.href.split('/').slice(0, 3).join('/');
+
+const characterSeriesInput = document.querySelector('#id_character_series');
 
 const totalForms = document.querySelector("#id_relations-form-TOTAL_FORMS");
 const totalReferenceForms = document.querySelector("#id_references-form-TOTAL_FORMS");
@@ -13,6 +16,37 @@ const characterForm = document.querySelector("#new_character_form");
 
 let relationsFormCount = relationForm.length - 1;
 let referencesFormCount = referenceForm.length - 1;
+
+let seriesAutocompleteSuggest = [];
+
+function debounce (callback, wait) {
+	let timeout;
+	return function() {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => callback.apply(this, arguments), wait)
+	}
+}
+
+const handleKeypress = debounce(async (str) => {
+	const autocompleteRequest = `${webPrefix}/autocomplete/series?search_text=${str}`;
+	
+	const response = await fetch(autocompleteRequest, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+		}
+	).then(result => {
+		return result.json();
+	})
+
+	seriesAutocompleteSuggest = [...response.series];
+	console.log(seriesAutocompleteSuggest);
+}, 500);
+
+characterSeriesInput.addEventListener("input", (event) => { 
+	handleKeypress(event.target.value);
+});
 
 addReferenceFormBtn.addEventListener("click", (evt) => {
 	evt.preventDefault();
