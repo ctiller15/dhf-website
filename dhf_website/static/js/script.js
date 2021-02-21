@@ -2,6 +2,9 @@
 // Look into consolidating into a few methods when time permits.
 const webPrefix = window.location.href.split('/').slice(0, 3).join('/');
 
+const seriesAutocompleteRequestUrl = `${webPrefix}/autocomplete/series?search_text=`;
+const characterAutocompleteRequestUrl = `${webPrefix}/autocomplete/character?search_text=`;
+
 const characterSeriesInput = document.querySelector('#id_character_series');
 const characterSeriesIdInput = document.querySelector('#id_character_series_id');
 
@@ -18,20 +21,22 @@ const characterForm = document.querySelector("#new_character_form");
 let relationsFormCount = relationForm.length - 1;
 let referencesFormCount = referenceForm.length - 1;
 
+const relationFormInput = relationForm[0].querySelector('#id_relations-form-0-character_name');
+const relationFormIdInput = relationForm[0].querySelector('#id_relations-form-0-character_id');
+
+// Dry. Fix later.
+relationFormInput.addEventListener('input', (e) => {handleKeypress(e.target.value, relationFormInput, relationFormIdInput, characterAutocompleteRequestUrl, 'character')});
+
 const createAutocompleteRow = (formField, formIdField, text, id) => {
 	const newDiv = document.createElement("div");
 
 	const textContent = document.createTextNode(text);
 
 	newDiv.appendChild(textContent);
-	console.log('Adding event listener!');
 	newDiv.addEventListener('click', (event) => {
 		formField.value = text;
 		formIdField.value = id;
-		console.log(formField);
-		console.log('Clicked!', id);
 	});
-	console.log(newDiv);
 
 	return newDiv;
 }
@@ -46,9 +51,10 @@ function debounce (callback, wait) {
 	}
 }
 
-const handleKeypress = debounce(async (str) => {
 
-	const autocompleteRequest = `${webPrefix}/autocomplete/series?search_text=${str}`;
+const handleKeypress = debounce(async (str, inputElement, hiddenIdElement, requestUrl, type) => {
+
+	const autocompleteRequest = `${requestUrl}${str}`;
 	
 	const response = await fetch(autocompleteRequest, {
 		method: 'GET',
@@ -61,25 +67,30 @@ const handleKeypress = debounce(async (str) => {
 	})
 
 	// doing too many things. Break out into separate functions.
-	seriesAutocompleteSuggest = [...response.series].map(m => createAutocompleteRow(characterSeriesInput, characterSeriesIdInput, m.name, m.id));
+	let autocompleteSuggest;
+	if(type === 'series') {
+		autocompleteSuggest = [...response.series].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id));
+	} else if (type === 'character') {
+		autocompleteSuggest = [...response.character].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id));
+	}
 	const autocompleteList = document.createElement('div');
 
-	seriesAutocompleteSuggest.forEach((item) => {
+	autocompleteSuggest.forEach((item) => {
 		autocompleteList.appendChild(item);	
 	});
 
 	// instead of clobbering the div entirely, just replace the content.
-	if(characterSeriesInput.nextSibling) {
-		characterSeriesInput.nextSibling.innerHTML = '';
-		characterSeriesInput.parentNode.insertBefore(autocompleteList, characterSeriesInput.nextSibling);
+	if(inputElement.nextSibling) {
+		inputElement.nextSibling.innerHTML = '';
+		inputElement.parentNode.insertBefore(autocompleteList, inputElement.nextSibling);
 	} else {
-		characterSeriesInput.parentNode.insertBefore(autocompleteList, characterSeriesInput.nextSibling);
+		inputElement.parentNode.insertBefore(autocompleteList, inputElement.nextSibling);
 	}
 
 }, 500);
 
 characterSeriesInput.addEventListener("input", (event) => { 
-	handleKeypress(event.target.value);
+	handleKeypress(event.target.value, characterSeriesInput, characterSeriesIdInput, seriesAutocompleteRequestUrl, 'series');
 });
 
 addReferenceFormBtn.addEventListener("click", (evt) => {
@@ -105,6 +116,12 @@ addRelationFormBtn.addEventListener("click", (evt) => {
 	relationsFormCount++;
 
 	newRelationForm.innerHTML = newRelationForm.innerHTML.replace(formRegex, `form-${relationsFormCount}-`);
+
+	const newFormInput = newRelationForm.querySelector(`#id_relations-form-${relationsFormCount}-character_name`);
+	const newFormHiddenIdInput = newRelationForm.querySelector(`#id_relations-form-${relationsFormCount}-character_id`);
+
+	//handleKeypress(event.target.value, characterSeriesInput, characterSeriesIdInput, seriesAutocompleteRequestUrl, 'series');
+	newFormInput.addEventListener('input', (e) => {handleKeypress(e.target.value, newFormInput, newFormHiddenIdInput, characterAutocompleteRequestUrl, 'character')});
 
 	characterForm.insertBefore(newRelationForm, addRelationFormBtn);
 

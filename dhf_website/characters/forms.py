@@ -3,6 +3,7 @@ from django import forms
 class RelationForm(forms.Form):
     character_name = forms.CharField(label='Character', max_length=200)
     summary = forms.CharField(label='summary', max_length=500)
+    character_id = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
 class ReferenceForm(forms.Form):
     title = forms.CharField(max_length=200)

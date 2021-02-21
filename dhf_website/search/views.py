@@ -39,3 +39,14 @@ def autocomplete_series(request):
 
         updated_series_list = [{'name': series.name, 'id': series.id} for series in series_list]
         return JsonResponse({ 'series': updated_series_list})
+
+def autocomplete_character(request):
+
+    search_text = request.GET.get('search_text', None).lower()
+
+    if request.method == 'GET':
+        character_list = Character.objects.filter(name__icontains=search_text)
+
+        updated_character_list = [{'name': character.name, 'id': character.id} for character in character_list]
+
+        return JsonResponse({ 'character': updated_character_list})

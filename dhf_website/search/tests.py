@@ -77,3 +77,14 @@ class SearchAutocompleteTexts(TestCase):
         
         for payload in response_content['series']:
             self.assertIn(search_text.lower(), payload['name'].lower())
+
+    def test_search_character_autocomplete(self):
+        search_text = 'di'
+
+        response = self.client.get(f'/autocomplete/character?search_text={search_text}')
+
+        response_content = json.loads(response.content)
+        self.assertGreater(len(response_content), 0)
+
+        for payload in response_content['character']:
+            self.assertIn(search_text.lower(), payload['name'].lower())
