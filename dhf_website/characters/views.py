@@ -41,7 +41,9 @@ def character_creation_page(request):
             cleaned_character = character_creation_form.cleaned_data
             
             if cleaned_character['character_series_id']:
-                char_series = Series.objects.get(id=cleaned_character['character_series_id'])
+                char_series, created = Series.objects.get_or_create(id=cleaned_character['character_series_id'])
+                if created:
+                    char_series.name = cleaned_character['character_series']
             else:
                 char_series, created = Series.objects.get_or_create(name=cleaned_character['character_series'])
 
@@ -55,14 +57,16 @@ def character_creation_page(request):
             )
 
             for relation in relations_formset.cleaned_data:
-                if('character_name' in relation):
+                if 'character_id' in relation and relation['character_id'] is not None:
+                    char_relation = Character.objects.get(id=relation['character_id']) 
+                elif 'character_name' in relation:
                     char_relation = Character.objects.create(
                         name=relation['character_name'],
                         f_status=found_f_status,
                         series=char_series,
                     )
 
-                    relation_obj = CharacterRelation.objects.create(character_1=new_character, character_2=char_relation, relation_summary=relation['summary'])
+                relation_obj = CharacterRelation.objects.create(character_1=new_character, character_2=char_relation, relation_summary=relation['summary'])
 
             for reference in references_formset.cleaned_data:
                 CharacterReference.objects.create(character=new_character, text=reference['title'])

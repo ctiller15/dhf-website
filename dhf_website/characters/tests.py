@@ -92,6 +92,22 @@ class CharacterCreationTests(TestCase):
             'references-form-0-title': 'ref1'
         }
 
+        self.third_character_data = {
+            'character_name': 'Talia Al Ghul',
+            'f_status': 1,
+            'character_series': 'Batman the animated series',
+            'character_series_id': 9,
+            'summary': 'One of Batman\'s many recurring enemies',
+            'relations-form-TOTAL_FORMS': 1,
+            'relations-form-INITIAL_FORMS': 0,
+            'relations-form-0-character_name': 'Batman',
+            'relations-form-0-summary': 'Damien Wayne exists',
+            'relations-form-0-character_id': 6,
+            'references-form-TOTAL_FORMS': 1,
+            'references-form-INITIAL_FORMS': 0,
+            'references-form-0-title': 'refbatman'
+        }
+
         self.test_form_data = [
             (
                 {
@@ -158,6 +174,18 @@ class CharacterCreationTests(TestCase):
         seriesCountAfter = len(Series.objects.all())
 
         self.assertEqual(seriesCountBefore, seriesCountAfter - 1)
+
+    def test_character_page_does_not_save_duplicate_characters_if_id_is_provided(self):
+        charCountBefore = len(Character.objects.all())
+        self.client.login(username='charcreationuser', password='dummyp@ss123')
+
+        response = self.client.post(f'/characters/create/', self.second_character_data, follow=True)
+        
+        response2 = self.client.post(f'/characters/create/', self.third_character_data, follow=True)
+
+        charCountAfter = len(Character.objects.all())
+
+        self.assertEqual(charCountBefore + 3, charCountAfter)
 
     def test_character_creation_form_validation(self):
         for data, assertion in self.test_form_data:
