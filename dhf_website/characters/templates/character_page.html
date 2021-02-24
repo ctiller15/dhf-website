@@ -2,6 +2,7 @@
 
 {% block content %}
 
+<a href="{% url 'character_update' %}?character_id={{ results.id }}">Update character</a>
 <h2>{{ results.name }} {{ results.f_status_text }}</h2>
 
 <h3>Series: {{ results.series }}</h3>

@@ -40,6 +40,18 @@ class CharacterPageTests(TestCase):
         self.assertIn('Harley Quinn', response_content)
         self.assertIn('reference 1', response_content)
 
+    def test_character_update_page_preloads_character_data(self):
+        response = self.client.get('/characters/update?character_id=1')
+
+        response_content = str(response.content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Dick Grayson', response_content)
+        self.assertIn('Teen Titans', response_content)
+        self.assertIn('Starfire', response_content)
+        self.assertIn('Harley Quinn', response_content)
+        self.assertIn('reference 1', response_content)
+
 class CharacterBrowserTests(TestCase):
     fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json', 'character_references']
 
