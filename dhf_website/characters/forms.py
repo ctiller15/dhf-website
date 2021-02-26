@@ -11,6 +11,7 @@ class ReferenceForm(forms.Form):
 class CharacterCreationForm(forms.Form):
     CHOICES = (( 1, 'Yes'), ( 2, 'No'), ( 3,'Maybe'),)
     character_name = forms.CharField(label='Character name', max_length=200, min_length=0)
+    character_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'readonly': 'readonly'}))
     character_series = forms.CharField(label='Character Series', max_length=200, min_length=0)
     character_series_id = forms.IntegerField(required=False, widget=forms.HiddenInput())
     f_status = forms.ChoiceField(choices=CHOICES)

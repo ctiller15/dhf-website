@@ -134,6 +134,7 @@ def character_list(request):
 
         return render(request, 'character_list_page.html', context={ 'results': characters })
 
+@login_required
 def character_update(request):
     if request.method == 'GET':
 
@@ -157,11 +158,15 @@ def character_update(request):
             .filter(character=character['id']) \
             .values('text')
 
-        RelationsFormSet = formset_factory(RelationForm, extra=len(relations))
-        ReferencesFormSet = formset_factory(ReferenceForm, extra=len(references))
+        print(relations)
+        print(len(relations))
+        print(references)
+        print(len(references))
+        RelationsFormSet = formset_factory(RelationForm, extra=0)
+        ReferencesFormSet = formset_factory(ReferenceForm, extra=0)
 
         relations_formset = RelationsFormSet(
-            prefix='relations_form',
+            prefix='relations-form',
             initial=[
                 {
                     'character_name': relation['character_name'], 
@@ -172,7 +177,7 @@ def character_update(request):
         )
 
         references_formset = ReferencesFormSet(
-            prefix="references_form",
+            prefix="references-form",
             initial=[
                 {
                     'title': reference['text']
@@ -182,12 +187,14 @@ def character_update(request):
 
         form = CharacterCreationForm(initial={
             'character_name': character['name'],
+            'character_id': character['id'],
             'character_series': character['series__name'],
             'character_series_id': character['series__id'],
             'f_status': character['f_status__id'],
             'summary': character['summary'],
         })
 
+        print(form)
         context = {
             'form': form,
             'relations_form': relations_formset,
@@ -203,3 +210,16 @@ def character_update(request):
         }
 
         return render(request, 'character_update_page.html', context={ 'results': context })
+    elif request.method == 'POST':
+        RelationsFormSet = formset_factory(RelationForm)
+        ReferencesFormSet = formset_factory(ReferenceForm)
+
+        print(request.POST)
+        character_creation_form = CharacterCreationForm(request.POST)
+        relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
+        references_formset = ReferencesFormSet(request.POST, prefix='references-form')
+
+        print(character_creation_form)
+        print(relations_formset.cleaned_data)
+        print(references_formset.cleaned_data)
+

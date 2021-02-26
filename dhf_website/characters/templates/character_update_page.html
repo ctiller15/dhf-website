@@ -4,25 +4,32 @@
 
 	<h1>Update page!</h1>
 	
-	{{ results.form }}
+	<form 
+		id="update_character_form" 
+		action="/characters/update/" 
+		method="post">
+		{% csrf_token %}
+		{{ results.form }}
 
-	{{ results.relations_form.management_form }}
-	{% for relation in results.relations_form %}
-		<div class="relation-form">
-			{{ relation.label_tag }}
-			{{ relation }}
-			<button type="button" class="delete-relation-form">Delete</button>
-		</div>
-	{% endfor %}
+		{{ results.relations_form.management_form }}
+		{% for relation in results.relations_form %}
+			<div class="relation-form">
+				{{ relation.label_tag }}
+				{{ relation }}
+				<button type="button" class="delete-relation-form">Delete</button>
+			</div>
+		{% endfor %}
 
-	{{ results.references_form.management_form }}
-	{% for reference in results.references_form %}
-		<div class="reference-form">
-			{{ reference.label_tag }}
-			{{ reference }}
-			<button type="button" class="delete-reference-form">Delete</button>
-		</div>
-	{% endfor %}
+		{{ results.references_form.management_form }}
+		{% for reference in results.references_form %}
+			<div class="reference-form">
+				{{ reference.label_tag }}
+				{{ reference }}
+				<button type="button" class="delete-reference-form">Delete</button>
+			</div>
+		{% endfor %}
+		<input type="submit" value="submit" />
+	</form>
 
 
 {% endblock %}
