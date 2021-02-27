@@ -5,4 +5,4 @@ class SearchForm(forms.Form):
         label="Character Name", 
         max_length=100, 
         required=True,                          
-        widget=forms.TextInput(attrs={'required': 'true'}))
+        widget=forms.TextInput(attrs={'required': 'true', 'placeholder': 'E.g. "Arthur Dent"'}))

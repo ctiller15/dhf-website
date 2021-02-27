@@ -1,0 +1,43 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	--main-bg-color: #2C2130;
+	--main-button-color: #9039AE;
+	--main-text-color: #FFFFFF;
+	background-color: var(--main-bg-color);
+	color: var(--main-text-color);
+	display: flex;
+	flex-direction: column;
+}
+
+.home-search-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex-grow: 1;
+}
+
+.home-search-section p {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.home-search-section p:nth-child(2) {
+	font-style: italic;
+}
+
+.home-search-section .search-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.home-search-button {
+	font-weight: bold;
+	font-size: 24px;
+	background-color: var(--main-button-color);
+	color: var(--main-text-color);
+}

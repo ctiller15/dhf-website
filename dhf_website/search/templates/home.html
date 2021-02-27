@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Hello world!</h1>
+	
+<section class="home-search-section">
+	<p>Does</p>
 
-	<form 
-		action="/search" 
-		method="get">
-		{{ form.as_p }}
-		<input 
-			type="submit" 
-			value="Search">
-	</form>
+		<form 
+			action="/search" 
+			method="get"
+			class="search-form">
+			{% for field in form %}
+				{{ field }}
+			{% endfor %}
+			<p>Fuck?</p>
+			<input class="pure-button home-search-button"
+				type="submit" 
+				value="Search">
+		</form>
+</section>
 
 {% endblock %}

@@ -158,10 +158,6 @@ def character_update(request):
             .filter(character=character['id']) \
             .values('text')
 
-        print(relations)
-        print(len(relations))
-        print(references)
-        print(len(references))
         RelationsFormSet = formset_factory(RelationForm, extra=0)
         ReferencesFormSet = formset_factory(ReferenceForm, extra=0)
 
@@ -194,7 +190,6 @@ def character_update(request):
             'summary': character['summary'],
         })
 
-        print(form)
         context = {
             'form': form,
             'relations_form': relations_formset,
@@ -219,7 +214,4 @@ def character_update(request):
         relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
         references_formset = ReferencesFormSet(request.POST, prefix='references-form')
 
-        print(character_creation_form)
-        print(relations_formset.cleaned_data)
-        print(references_formset.cleaned_data)
-
+        # and save the updated form data.

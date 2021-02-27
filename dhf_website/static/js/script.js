@@ -16,7 +16,7 @@ const addReferenceFormBtn = document.querySelector("#add-reference-form");
 
 const relationForm = document.getElementsByClassName("relation-form");
 const referenceForm = document.getElementsByClassName("reference-form");
-const characterForm = document.querySelector("#new_character_form");
+const characterForm = document.querySelector("#new_character_form") || document.querySelector("#update_character_form");
 
 let relationsFormCount = relationForm.length - 1;
 let referencesFormCount = referenceForm.length - 1;
