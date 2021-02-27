@@ -6,10 +6,34 @@ body {
 	--main-bg-color: #2C2130;
 	--main-button-color: #9039AE;
 	--main-text-color: #FFFFFF;
+	--nav-bg-color: #000000;
 	background-color: var(--main-bg-color);
 	color: var(--main-text-color);
 	display: flex;
 	flex-direction: column;
+}
+
+.navbar.pure-menu-horizontal {
+	background-color: var(--nav-bg-color);
+	display: flex;
+	justify-content: space-between;
+}
+
+.navbar .navbar-groups {
+	flex-grow: 1;
+	display: flex;
+	justify-content: space-around;
+}
+
+.navbar .navbar-groups .navbar-group {
+	display: flex;
+	align-items: center;
+}
+
+.navbar .pure-menu-link {
+	display: inline-block;
+	font-size: .8em;
+	padding: .5em .5em;
 }
 
 .home-search-section {

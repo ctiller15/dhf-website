@@ -10,17 +10,19 @@
 		<link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}"/>
 	</head>
 
-	<nav>
-		<section>
-			<a href="{% url 'home' %}">Home</a>
+	<nav class="pure-menu pure-menu-horizontal navbar">
+		<section class="pure-menu-heading">
+			<a href="{% url 'home' %}">DHF?</a>
 		</section>
-		<section>
-			<a href="{% url 'character_list' %}">Characters</a>
-			<a href="{% url 'series_list' %}">Series</a>
-		</section>
-		<section>
-			<a href="{% url 'register' %}">Sign Up</a>
-			<a href="{% url 'login' %}">Log In</a>
+		<section class="pure-menu-list navbar-groups">
+			<section class="pure-menu-item pure-menu-list navbar-group">
+				<a class="pure-menu-link" href="{% url 'character_list' %}">Characters</a>
+				<a class="pure-menu-link" href="{% url 'series_list' %}">Series</a>
+			</section>
+			<section class="pure-menu-item pure-menu-list navbar-group">
+				<a class="pure-menu-link" href="{% url 'register' %}">Sign Up</a>
+				<a class="pure-menu-link" href="{% url 'login' %}">Log In</a>
+			</section>
 		</section>
 	</nav>
 
