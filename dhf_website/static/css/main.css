@@ -13,6 +13,12 @@ body {
 	flex-direction: column;
 }
 
+.body-content {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+}
+
 .navbar.pure-menu-horizontal {
 	background-color: var(--nav-bg-color);
 	display: flex;
@@ -64,4 +70,13 @@ body {
 	font-size: 24px;
 	background-color: var(--main-button-color);
 	color: var(--main-text-color);
+}
+
+.search-bar {
+	display: flex;
+	justify-content: space-between;
+}
+
+.footer {
+	background-color: var(--nav-bg-color);
 }

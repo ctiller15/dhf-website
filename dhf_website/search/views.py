@@ -23,7 +23,7 @@ def search_character(request, term):
 
 def home(request):
     form = SearchForm()
-    return render(request, "home.html", {'form': form })
+    return render(request, "home.html", {'form': form, 'extra': { 'hide_search_bar': True} })
 
 def search(request):
 

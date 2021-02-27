@@ -4,31 +4,98 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Does He fuck?</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
+		<meta 
+			name="viewport" 
+			content="width=device-width, initial-scale=1.0">
+		<link 
+			rel="stylesheet" 
+			href="https://unpkg.com/purecss@2.0.5/build/pure-min.css" 
+			integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" 
+			crossorigin="anonymous">
 		{% load static %}
-		<link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}"/>
+		<link 
+			rel="stylesheet" 
+			type="text/css" 
+			href="{% static "css/main.css" %}"/>
 	</head>
 
-	<nav class="pure-menu pure-menu-horizontal navbar">
-		<section class="pure-menu-heading">
-			<a href="{% url 'home' %}">DHF?</a>
-		</section>
-		<section class="pure-menu-list navbar-groups">
-			<section class="pure-menu-item pure-menu-list navbar-group">
-				<a class="pure-menu-link" href="{% url 'character_list' %}">Characters</a>
-				<a class="pure-menu-link" href="{% url 'series_list' %}">Series</a>
-			</section>
-			<section class="pure-menu-item pure-menu-list navbar-group">
-				<a class="pure-menu-link" href="{% url 'register' %}">Sign Up</a>
-				<a class="pure-menu-link" href="{% url 'login' %}">Log In</a>
-			</section>
-		</section>
-	</nav>
-
 	<body>
-		{% block content %}
-		{% endblock %}
+		<nav class="pure-menu pure-menu-horizontal navbar">
+			<section class="pure-menu-heading">
+				<a href="{% url 'home' %}">DHF?</a>
+			</section>
+			<section class="pure-menu-list navbar-groups">
+				<section class="pure-menu-item pure-menu-list navbar-group">
+					<a 
+						class="pure-menu-link" 
+						href="{% url 'character_list' %}">Characters</a>
+					<a 
+						class="pure-menu-link" 
+						href="{% url 'series_list' %}">Series</a>
+				</section>
+				<section class="pure-menu-item pure-menu-list navbar-group">
+					<a 
+						class="pure-menu-link" 
+						href="{% url 'register' %}">Sign Up</a>
+					<a 
+						class="pure-menu-link" 
+						href="{% url 'login' %}">Log In</a>
+				</section>
+			</section>
+		</nav>
+
+		<section class="body-content">
+			{% if not extra.hide_search_bar %}
+				<form 
+					action="/search" 
+					method="get"
+					class="search-bar">
+					
+					<p>does</p>
+
+					<input 
+						type="text" 
+						name="search_term" 
+						placeholder="E.g. 'Arthur Dent'" 
+						maxLength="100"/>
+					
+					<p>Fuck?</p>
+					
+					<input class="pure-button home-search-button"
+						type="submit" 
+						value="Search">
+				</form>
+			{% endif %}
+
+			{% block content %}
+			{% endblock %}
+		</section>
+
+		<nav class="footer pure-menu pure-menu-horizontal">
+			<ul class="pure-menu-list">
+				<li class="pure-menu-item">
+					<a 
+						href="#" 
+						class="pure-menu-link">Github</a>
+				</li>
+				<li class="pure-menu-item pure-menu-disabled">
+					<a 
+						href="#" 
+						class="pure-menu-link">Twitter</a>
+				</li>
+				<li class="pure-menu-item pure-menu-disabled">
+					<a 
+						href="#" 
+						class="pure-menu-link">Users</a>
+				</li>
+				<li class="pure-menu-item pure-menu-disabled">
+					<a 
+						href="#" 
+						class="pure-menu-link">Updates</a>
+				</li>
+			</ul>
+		</nav>
 	</body>
+
 
 </html>
