@@ -130,7 +130,7 @@ def character_page(request, character_name=None, character_id=None):
 
 def character_list(request):
     if request.method == 'GET':
-        characters = Character.objects.all()
+        characters = Character.objects.all().order_by('name')
 
         return render(request, 'character_list_page.html', context={ 'results': characters })
 

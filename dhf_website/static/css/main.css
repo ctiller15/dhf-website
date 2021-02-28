@@ -7,6 +7,7 @@ body {
 	--main-button-color: #9039AE;
 	--main-text-color: #FFFFFF;
 	--nav-bg-color: #000000;
+	--link-default-color: #2AB2FE;
 	background-color: var(--main-bg-color);
 	color: var(--main-text-color);
 	display: flex;
@@ -74,9 +75,71 @@ body {
 
 .search-bar {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
+	align-items: center;
+	padding: .5em 1em;
+}
+
+.search-bar input {
+	width: 9em;
+	height: 2em;
+	font-size: .7em;
+}
+
+.search-bar input.pure-button {
+	width: 5em;
+	height: 2em;
+	line-height: 1em;
+	padding: 0;
+}
+
+.list-page-content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 0 10%;
+}
+
+.list-page-content hr {
+	width: 100%;
+	margin: .2em 0em 0em 1em;
+}
+
+.list-page-content .pure-menu-list {
+	margin-bottom: 1em;
+}
+
+.list-page-content .pure-menu-heading {
+	margin-bottom: .2em;
+	color: var(--main-text-color);
+}
+
+.list-page-content .pure-menu-item {
+	height: unset;
+}
+
+a:not(.navbar *, .footer *) , .pure-menu-link:not(.navbar *, .footer *) {
+	text-decoration: underline;
+	color: var(--link-default-color);
+}
+
+.list-add-button {
+	padding: 3em 1em;
+	text-align: center;
+}
+
+.list-add-button a {
+	background-color: var(--main-button-color);
+	text-decoration: none;
+	color: var(--main-text-color);
+	padding: 1em;
+	display: inline-block;
+	border-radius: 5px;
 }
 
 .footer {
 	background-color: var(--nav-bg-color);
+	font-size: .9em;
+	display: flex;
+	justify-content: space-around;
 }

@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	{% for character in results %}
-		<a href="/characters/char-id-{{character.id}}/">{{character.name}}</a>
-	{% endfor %}
+	{% regroup results by first_char_group as character_letter_list %}
+	<section class="list-page-content pure-menu">
+		{% for prefix in character_letter_list %}
+		<p class="pure-menu-heading"><strong>{{ prefix.grouper }}</strong></p>
+		<ul class="pure-menu-list">
+			<hr/>
+			{% for character in prefix.list %}
+			<li class="pure-menu-item">
+				<a class="pure-menu-link" href="/characters/char-id-{{character.id}}/">{{character.name}}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endfor %}
+
+		<section class="list-add-button">
+			<p><strong>Are we missing someone? Help contribute!</strong></p>
+			<a href="{% url 'character_creation_page' %}"><strong>Add Character</strong></a>
+		</section>
+	</section>
+
 {% endblock %}

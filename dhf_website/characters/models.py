@@ -24,6 +24,13 @@ class Character(models.Model):
     series = models.ForeignKey(Series, on_delete=models.DO_NOTHING, null=True)
     relations = models.ManyToManyField("self", through='CharacterRelation')
 
+    def first_char_group(self):
+        if self.name:
+            if not self.name[0].isalpha():
+                return '#'
+            else:
+                return self.name[0]
+
     class Meta:
         constraints = [
             models.CheckConstraint(
