@@ -2,29 +2,44 @@
 
 {% block content %}
 
-<a href="{% url 'character_update' %}?character_id={{ results.id }}">Update character</a>
-<h2>{{ results.name }} {{ results.f_status_text }}</h2>
+<section class="character-page-container">
+	<img 
+		class="pure-img"
+		src="{{ results.thumbnail }}" 
+		alt="{{ results.name }}"/>
 
-<h3>Series:<a href="/series/id={{ results.series_id }}">{{ results.series }}</a></h3>
+	<a href="{% url 'character_update' %}?character_id={{ results.id }}">Update character</a>
+	<h2>{{ results.name }} <i>{{ results.f_status_text }}</i></h2>
 
-<h4>Summary</h4>
-<p>{{ results.summary }}</p>
+	<h3>Series: <a href="/series/id={{ results.series_id }}">{{ results.series }}</a></h3>
+	<hr />
 
-{% if results.f_status == "yes" %}
-	<h4>Relations</h4>
+	<p class="character-summary">{{ results.summary }}</p>
 
-	{% for relation in results.relations %}
-		<a 
-   			class="pure-menu-link" 
-			href="/characters/char-id-{{ relation.character_id }}/">
-			{{ relation.character_name }}
-		</a>
-		<p>{{ relation.relation_summary }}</p>
+	{% if results.f_status == "yes" %}
+		<h4>Relations</h4>
+
+		{% for relation in results.relations %}
+		<section class="character-relation">
+			<a 
+				class="pure-link" 
+				href="/characters/char-id-{{ relation.character_id }}/">
+				{{ relation.character_name }}
+			</a>
+			<p>{{ relation.relation_summary }}</p>
+		</section>
+		<hr/>
+		{% endfor %}
+	{% endif %}
+
+	<h5>References</h5>
+	<ol class="reference-list">
+	{% for reference in results.references %}
+		<li>
+			<p>{{ reference.text }}</p>
+		</li>
 	{% endfor %}
-{% endif %}
-
-{% for reference in results.references %}
-	<p>{{ reference.text }}
-{% endfor %}
+	</ol>
+</section>
 
 {% endblock %}

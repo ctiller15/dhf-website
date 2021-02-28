@@ -6,10 +6,11 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from characters.forms import CharacterCreationForm, ReferenceForm, RelationForm
 from django.forms import formset_factory
+from django.conf import settings
 
 def calculate_f_status_text(input_text):
     statuses = {
-        'yes': 'fucks',
+        'yes': 'Fucks',
         'no': 'DOES NOT fuck',
         'maybe': 'MIGHT fuck'
     }
@@ -86,12 +87,12 @@ def character_page(request, character_name=None, character_id=None):
         if character_name:
             character = Character.objects \
                 .filter(name__iexact=character_name) \
-                .values('id', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
+                .values('id', 'thumbnail', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
                 .first()
         elif character_id:
             character = Character.objects \
                 .filter(id=character_id) \
-                .values('id', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
+                .values('id', 'thumbnail', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
                 .first()
 
         relations = ( CharacterRelation.objects \
@@ -108,6 +109,7 @@ def character_page(request, character_name=None, character_id=None):
         context = {
             'name': character['name'],
             'id': character['id'],
+            'thumbnail': request.build_absolute_uri('/').strip("/") + settings.MEDIA_URL + str(character['thumbnail']),
             'f_status_text': calculate_f_status_text(character['f_status__name']),
             'f_status': character['f_status__name'],
             'series': character['series__name'],

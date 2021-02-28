@@ -17,6 +17,7 @@ class Series(models.Model):
 class Character(models.Model):
     # character_id PK
     name = models.CharField(max_length=200, blank=False, validators=[MinLengthValidator(1)])
+    thumbnail = models.ImageField(upload_to='images/', null=True)
     summary = models.CharField(max_length=500)
     # imagePath CharField-300
     hidden = models.BooleanField(default=False)

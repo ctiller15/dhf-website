@@ -93,6 +93,45 @@ body {
 	padding: 0;
 }
 
+.character-page-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 10%;
+}
+
+.character-page-container img {
+	max-height: 15em;
+	width: auto;
+}
+
+.character-page-container hr {
+	width: 100%;
+}
+
+.character-page-container .character-summary {
+	font-size: 1em;
+}
+
+.character-page-container h4 {
+	margin: .5em 0;
+}
+
+.character-page-container h5 {
+	margin: .3em 0;
+}
+
+.character-page-container .reference-list {
+	margin: 0;
+	align-self: flex-start;
+}
+
+.character-page-container .character-relation {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
 .list-page-content {
 	display: flex;
 	flex-direction: column;

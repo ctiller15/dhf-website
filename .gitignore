@@ -1,3 +1,4 @@
 .env
 dhf-virtualenv/*
 *.pyc
+dhf_website/media/images/*
