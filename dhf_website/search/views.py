@@ -6,7 +6,7 @@ from characters.models import Character, Series
 from itertools import chain
 
 def search_character(request, term):
-    exact_results = Character.objects.filter(name=term)
+    exact_results = Character.objects.filter(name__iexact=term)
     fuzzy_results = Character.objects.filter(name__search=term)
 
     total_results = list(chain(exact_results, fuzzy_results))

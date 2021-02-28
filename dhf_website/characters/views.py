@@ -85,21 +85,21 @@ def character_page(request, character_name=None, character_id=None):
 
         if character_name:
             character = Character.objects \
-                .filter(name=character_name) \
-                .values('id', 'name', 'f_status__name', 'series__name', 'summary') \
+                .filter(name__iexact=character_name) \
+                .values('id', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
                 .first()
         elif character_id:
             character = Character.objects \
                 .filter(id=character_id) \
-                .values('id', 'name', 'f_status__name', 'series__name', 'summary') \
+                .values('id', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
                 .first()
 
         relations = ( CharacterRelation.objects \
             .filter(character_1__id=character['id']) \
-            .values('relation_summary', character_name=F('character_2__name')) ) \
+            .values('relation_summary', character_name=F('character_2__name'), character_id=F('character_2__id') ) \
             .union(CharacterRelation.objects \
            .filter(character_2__id=character['id']) \
-                   .values('relation_summary', character_name=F('character_1__name')))
+                   .values('relation_summary', character_name=F('character_1__name'), character_id=F('character_1__id'))))
 
         references = CharacterReference.objects \
             .filter(character=character['id']) \
@@ -111,6 +111,7 @@ def character_page(request, character_name=None, character_id=None):
             'f_status_text': calculate_f_status_text(character['f_status__name']),
             'f_status': character['f_status__name'],
             'series': character['series__name'],
+            'series_id': character['series__id'],
             'summary': character['summary'],
             'relations': relations,
             'references': references,

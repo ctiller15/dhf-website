@@ -61,6 +61,15 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'character_page.html')
 
+    def test_searching_is_case_insensitive(self):
+
+        Character.objects.create(name="Bojack Horseman")
+
+        response = self.client.get('/search?search_term=BOJACK HORSEMAN', follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'character_page.html')
+
 class SearchAutocompleteTexts(TestCase):
     fixtures = ['f_status.json', 'series.json']
 

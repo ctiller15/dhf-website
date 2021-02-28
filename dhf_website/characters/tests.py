@@ -23,7 +23,7 @@ class CharacterModelTests(TestCase):
 
 class CharacterPageTests(TestCase):
 
-    fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json', 'character_references']
+    fixtures = ['f_status.json', 'series.json', 'characters.json', 'character_relations.json', 'character_references', 'users.json']
 
     def setUp(self):
         self.client = Client()
@@ -41,7 +41,9 @@ class CharacterPageTests(TestCase):
         self.assertIn('reference 1', response_content)
 
     def test_character_update_page_preloads_character_data(self):
-        response = self.client.get('/characters/update?character_id=1')
+        self.client.login(username='charcreationuser', password='dummyp@ss123')
+
+        response = self.client.get('/characters/update/?character_id=1')
 
         response_content = str(response.content)
 
