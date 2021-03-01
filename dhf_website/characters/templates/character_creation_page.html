@@ -1,43 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<p>This is a form to create a character!</p>
-	<form id="new_character_form" action="/characters/create/" method="post">
-		{% csrf_token %}
-		{{ form.as_p }}
+	<section class="character-page-container">	
+		<p>Create page for character</p>
+		<div class="preview-image">
+			<img id="character-upload-thumb" />
+		</div>
+		<form 
+			id="new_character_form" 
+			class="pure-form"
+			action="/characters/create/" 
+			method="post" 
+			enctype='multipart/form-data'>
+			{% csrf_token %}
+			{{ form }}
 
-		<p>relations</p>
+			<p>Who They Fucked</p>
 
-		{{ relations_form.management_form }}
-		{% for relation in relations_form %}
-			<div class="relation-form">
-				{{ relation.label_tag }}
-				{{ relation }}
-				<button type="button" class="delete-relation-form">Delete</button>
-			</div>
-		{% endfor %}
+			{{ relations_form.management_form }}
+			{% for relation in relations_form %}
+				<div class="relation-form">
+					<div class="relation-form-content">
+						<section class="field-group">
+							{{ relation.label_tag }}
+							{{ relation }}
+						</section>
+						<button 
+							type="button" 
+							class="delete-relation-form"
+							onclick="deleteRelationElement(this)"><i class="fas fa-trash"></i></button>
+					</div>
+					<hr />
+				</div>
+			{% endfor %}
 
-		<button 
-			type="button" 
-			id="add-relation-form">Add another relation</button>
+			<button 
+				class="pure-button"
+				type="button" 
+				id="add-relation-form">Add another relation</button>
 
-		<p>references</p>
-		{{ references_form.management_form }}
-		{% for reference in references_form %}
-			<div class="reference-form">
-				{{ reference.label_tag }}
-				{{ reference }}
-				<button type="button" class="delete-reference-form">Delete</button>
-			</div>
-		{% endfor %}
+			<p>references</p>
+			{{ references_form.management_form }}
+			{% for reference in references_form %}
+				<div class="reference-form">
+					{{ reference.label_tag }}
+					{{ reference }}
+					<button 
+						type="button" 
+						class="delete-reference-form">
+						<i class="fas fa-trash"></i>
+					</button>
+					<hr />
+				</div>
+			{% endfor %}
 
-		<button
-			type="button"
-			id="add-reference-form"
-			>Add another reference</button>
+			<button
+				class="pure-button"
+				type="button"
+				id="add-reference-form"
+				>Add another reference</button>
 
-		<input type="submit" value="submit">
-	</form>
+			<hr />
+
+			<input 
+				class="pure-button character-submit"
+				type="submit" 
+				value="Save">
+		</form>
+	</section>
 
 	{% load static %}
 	<script src="{% static 'js/script.js' %}"></script>

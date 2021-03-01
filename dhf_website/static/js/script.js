@@ -128,13 +128,24 @@ addRelationFormBtn.addEventListener("click", (evt) => {
 	totalForms.setAttribute('value', `${relationsFormCount + 1}`);
 });
 
-characterForm.addEventListener("click", (evt) => {
-	if (evt.target.classList.contains("delete-relation-form") && (relationsFormCount > 0)){
-		evt.preventDefault();
-		evt.target.parentElement.remove();
+const deleteRelationElement = (button) => {
+	if(relationsFormCount > 0){
+		button.parentElement.parentElement.remove();
 		relationsFormCount--;
 		totalForms.setAttribute('value', `${relationsFormCount + 1}`);
 		updateRelationsForms();
+	}
+}
+
+characterForm.addEventListener("click", (evt) => {
+	// bandage. Move away from this method once time permits.
+	if ((evt.target.classList.contains("delete-relation-form") || evt.target.parentNode.classList.contains("delete-relation-form")) && (relationsFormCount > 0)){
+		//evt.preventDefault();
+		//console.log('deleting!');
+		//evt.target.parentElement.parentElement.remove();
+		//relationsFormCount--;
+		//totalForms.setAttribute('value', `${relationsFormCount + 1}`);
+		//updateRelationsForms();
 	} else if (evt.target.classList.contains("delete-reference-form") && (referencesFormCount > 0)){
 		evt.preventDefault();
 		evt.target.parentElement.remove();
@@ -158,4 +169,17 @@ const updateReferencesForms = () => {
 		const formRegex = RegExp(`form-(\\d){1}-`, 'g');
 		form.innerHTML = form.innerHTML.replace(formRegex, `form-${count++}-`);
 	}
+}
+
+const previewImage = (input) => {
+	if(input.files && input.files[0]) {
+		const reader = new FileReader();
+
+		reader.onload = (e) => {
+			document.querySelector('#character-upload-thumb').setAttribute('src', e.target.result);
+		}
+
+		reader.readAsDataURL(input.files[0]);
+	}
+
 }

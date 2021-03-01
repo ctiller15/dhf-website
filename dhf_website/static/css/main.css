@@ -97,7 +97,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 10%;
+	padding: 0 5%;
 }
 
 .character-page-container img {
@@ -130,6 +130,51 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+}
+
+#new_character_form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+}
+
+#new_character_form textarea {
+	width: 87%;
+}
+
+#new_character_form .pure-button {
+	font-weight: bold;
+	background-color: var(--main-button-color);
+	text-decoration: none;
+	color: var(--main-text-color);
+	padding: 1em;
+	display: inline-block;
+	border-radius: 5px;
+	align-self: center;
+}
+
+#new_character_form .pure-button.character-submit {
+	margin: 1em;
+	font-size: 1.5em;
+	width: 50%;
+}
+
+.relation-form-content {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1.5em;
+}
+
+.relation-form button {
+	align-self: flex-end;
+	height: 2em;
+	width: 2em;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
 }
 
 .list-page-content {

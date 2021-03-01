@@ -33,12 +33,13 @@ def character_creation_page(request):
         return render(request, 'character_creation_page.html', context=context)
     elif request.method == 'POST':
 
-        character_creation_form = CharacterCreationForm(request.POST)
+        character_creation_form = CharacterCreationForm(request.POST, request.FILES)
         relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
         references_formset = ReferencesFormSet(request.POST, prefix='references-form')
             
         if(request.user.is_authenticated and character_creation_form.is_valid()):
 
+            print(character_creation_form)
             cleaned_character = character_creation_form.cleaned_data
             
             if cleaned_character['character_series_id']:
@@ -50,9 +51,12 @@ def character_creation_page(request):
 
             found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
 
+            print(cleaned_character)
+
             new_character = Character.objects.create(
                 name=cleaned_character['character_name'],
                 summary=cleaned_character['summary'],
+                thumbnail=cleaned_character['thumbnail'],
                 f_status=found_f_status,
                 series=char_series,
             )
