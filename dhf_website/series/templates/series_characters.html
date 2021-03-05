@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	{% for character in results %}
-	<a href="/characters/char-id-{{character.id}}">{{ character.name }}</a>
-	{% endfor %}
+	<h2>Characters in {{ series_name }}</h2>
+	{% regroup results by f_status_string as f_character_list %}
+		{% for prefix in f_character_list %}
+		<p class="pure-menu-heading"><strong>{{ prefix.grouper }}</strong></p>
+		<h4>
+		{% for character in prefix.list %}
+			<a href="/characters/char-id-{{character.id}}">{{ character.name }}</a>
+		{% endfor %}
+		{% endfor %}
 {% endblock %}

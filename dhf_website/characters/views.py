@@ -39,7 +39,6 @@ def character_creation_page(request):
             
         if(request.user.is_authenticated and character_creation_form.is_valid()):
 
-            print(character_creation_form)
             cleaned_character = character_creation_form.cleaned_data
             
             if cleaned_character['character_series_id']:
@@ -51,8 +50,6 @@ def character_creation_page(request):
 
             found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
 
-            print(cleaned_character)
-
             new_character = Character.objects.create(
                 name=cleaned_character['character_name'],
                 summary=cleaned_character['summary'],
@@ -61,7 +58,10 @@ def character_creation_page(request):
                 series=char_series,
             )
 
-            for relation in relations_formset.cleaned_data:
+            cleaned_relations = [rel for rel in relations_formset.cleaned_data if rel]
+            cleaned_references = [ref for ref in references_formset.cleaned_data if ref]
+
+            for relation in cleaned_relations:
                 if 'character_id' in relation and relation['character_id'] is not None:
                     char_relation = Character.objects.get(id=relation['character_id']) 
                 elif 'character_name' in relation:
@@ -73,7 +73,7 @@ def character_creation_page(request):
 
                 relation_obj = CharacterRelation.objects.create(character_1=new_character, character_2=char_relation, relation_summary=relation['summary'])
 
-            for reference in references_formset.cleaned_data:
+            for reference in cleaned_references:
                 CharacterReference.objects.create(character=new_character, text=reference['title'])
 
             return redirect(f'/characters/char-id-{new_character.id}/')
@@ -216,7 +216,6 @@ def character_update(request):
         RelationsFormSet = formset_factory(RelationForm)
         ReferencesFormSet = formset_factory(ReferenceForm)
 
-        print(request.POST)
         character_creation_form = CharacterCreationForm(request.POST)
         relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
         references_formset = ReferencesFormSet(request.POST, prefix='references-form')

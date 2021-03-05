@@ -14,6 +14,13 @@ DEFAULT_F_STATUS_ID = 1
 class Series(models.Model):
     name = models.CharField(max_length=200)
 
+    def first_char_group(self):
+        if self.name:
+            if not self.name[0].isalpha():
+                return '#'
+            else:
+                return self.name[0]
+
 class Character(models.Model):
     # character_id PK
     name = models.CharField(max_length=200, blank=False, validators=[MinLengthValidator(1)])

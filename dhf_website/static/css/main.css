@@ -160,13 +160,35 @@ body {
 	width: 50%;
 }
 
+.character-series {
+	position: relative;
+}
+
+.autocomplete {
+	position: absolute;
+	background-color: white;
+	color: black;
+	width: 100%;
+	padding: 1em;
+	box-sizing: border-box;
+	border: 1px solid #EEEEEE;
+	border-radius: 5px;
+}
+
 .relation-form-content {
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 1.5em;
 }
 
-.relation-form button {
+.reference-form {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+.relation-form button, .reference-form button {
 	align-self: flex-end;
 	height: 2em;
 	width: 2em;
@@ -175,6 +197,10 @@ body {
 	align-items: center;
 	justify-content: center;
 	padding: 0;
+}
+
+.reference-form button {
+	align-self: center;
 }
 
 .list-page-content {

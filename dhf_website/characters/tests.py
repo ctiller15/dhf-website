@@ -122,6 +122,23 @@ class CharacterCreationTests(TestCase):
             'references-form-0-title': 'refbatman'
         }
 
+        self.character_data_no_relations = {
+            'character_name': 'Todd',
+            'f_status': 3,
+            'character_series': 'Bojack Horseman',
+            'relations-form-TOTAL_FORMS': 1,
+            'relations-form-INITIAL_FORMS': 0,
+            'relations-form-MIN_NUM_FORMS': 0,
+            'relations-form-MAX_NUM_FORMS': 1000,
+            'relations-form-0-character_name': '',
+            'relations-form-0-summary': '',
+            'relations-form-0-character_id': '',
+            'references-form-TOTAL_FORMS': 1,
+            'references-form-INITIAL_FORMS': 0,
+            'references-form-0-title': ''
+
+        }
+
         self.test_form_data = [
             (
                 {
@@ -178,14 +195,14 @@ class CharacterCreationTests(TestCase):
         self.assertIn(self.character_data['references-form-0-title'], response_str)
 
     def test_character_page_does_not_save_duplicate_series_if_id_is_provided(self):
-        seriesCountBefore = len(Series.objects.all())
+        seriesCountBefore = len(Series.objects.filter(name=self.character_data['character_series']))
         self.client.login(username='charcreationuser', password='dummyp@ss123')
 
         response = self.client.post(f'/characters/create/', self.character_data, follow=True)
         
         response2 = self.client.post(f'/characters/create/', self.second_character_data, follow=True)
 
-        seriesCountAfter = len(Series.objects.all())
+        seriesCountAfter = len(Series.objects.filter(name=self.character_data['character_series']))
 
         self.assertEqual(seriesCountBefore, seriesCountAfter - 1)
 
@@ -200,6 +217,17 @@ class CharacterCreationTests(TestCase):
         charCountAfter = len(Character.objects.all())
 
         self.assertEqual(charCountBefore + 3, charCountAfter)
+
+    def test_character_page_does_error_if_no_relations_or_references_data(self):
+        charCountBefore = len(Character.objects.all())
+
+        self.client.login(username='charcreationuser', password='dummyp@ss123')
+
+        response = self.client.post(f'/characters/create/', self.character_data_no_relations, follow=True)
+        
+        charCountAfter = len(Character.objects.all())
+
+        self.assertEqual(charCountBefore + 1, charCountAfter)
 
     def test_character_creation_form_validation(self):
         for data, assertion in self.test_form_data:

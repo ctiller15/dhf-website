@@ -74,6 +74,7 @@ const handleKeypress = debounce(async (str, inputElement, hiddenIdElement, reque
 		autocompleteSuggest = [...response.character].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id));
 	}
 	const autocompleteList = document.createElement('div');
+	autocompleteList.classList.add('autocomplete');
 
 	autocompleteSuggest.forEach((item) => {
 		autocompleteList.appendChild(item);	
@@ -120,7 +121,6 @@ addRelationFormBtn.addEventListener("click", (evt) => {
 	const newFormInput = newRelationForm.querySelector(`#id_relations-form-${relationsFormCount}-character_name`);
 	const newFormHiddenIdInput = newRelationForm.querySelector(`#id_relations-form-${relationsFormCount}-character_id`);
 
-	//handleKeypress(event.target.value, characterSeriesInput, characterSeriesIdInput, seriesAutocompleteRequestUrl, 'series');
 	newFormInput.addEventListener('input', (e) => {handleKeypress(e.target.value, newFormInput, newFormHiddenIdInput, characterAutocompleteRequestUrl, 'character')});
 
 	characterForm.insertBefore(newRelationForm, addRelationFormBtn);
@@ -137,23 +137,14 @@ const deleteRelationElement = (button) => {
 	}
 }
 
-characterForm.addEventListener("click", (evt) => {
-	// bandage. Move away from this method once time permits.
-	if ((evt.target.classList.contains("delete-relation-form") || evt.target.parentNode.classList.contains("delete-relation-form")) && (relationsFormCount > 0)){
-		//evt.preventDefault();
-		//console.log('deleting!');
-		//evt.target.parentElement.parentElement.remove();
-		//relationsFormCount--;
-		//totalForms.setAttribute('value', `${relationsFormCount + 1}`);
-		//updateRelationsForms();
-	} else if (evt.target.classList.contains("delete-reference-form") && (referencesFormCount > 0)){
-		evt.preventDefault();
-		evt.target.parentElement.remove();
+const deleteReferenceElement = (button) => {
+	if(referencesFormCount > 0){
+		button.parentElement.remove();
 		referencesFormCount--;
 		totalReferenceForms.setAttribute('value', `${referencesFormCount + 1}`);
 		updateReferencesForms();
 	}
-});
+}
 
 const updateRelationsForms = () => {
 	let count = 0;

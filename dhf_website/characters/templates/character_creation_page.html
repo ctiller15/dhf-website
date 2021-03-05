@@ -11,9 +11,27 @@
 			class="pure-form"
 			action="/characters/create/" 
 			method="post" 
-			enctype='multipart/form-data'>
+			enctype='multipart/form-data'
+			autocomplete='off'>
 			{% csrf_token %}
-			{{ form }}
+			{{ form.thumbnail.label_tag }}
+			{{ form.thumbnail }}
+
+			{{ form.character_name.label_tag }}
+			{{ form.character_name }}
+			{{ form.character_id }}
+
+			<section class="character-series">
+				{{ form.character_series.label_tag }}
+				{{ form.character_series }}
+				{{ form.character_series_id }}
+			</section>
+
+			{{ form.f_status.label_tag }}
+			{{ form.f_status }}
+
+			{{ form.summary.label_tag }}
+			{{ form.summary }}
 
 			<p>Who They Fucked</p>
 
@@ -43,14 +61,13 @@
 			{{ references_form.management_form }}
 			{% for reference in references_form %}
 				<div class="reference-form">
-					{{ reference.label_tag }}
 					{{ reference }}
 					<button 
 						type="button" 
-						class="delete-reference-form">
+						class="delete-reference-form"
+						onClick="deleteReferenceElement(this)">
 						<i class="fas fa-trash"></i>
 					</button>
-					<hr />
 				</div>
 			{% endfor %}
 

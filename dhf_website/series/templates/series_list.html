@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	{% for series in results %}
-	<a href='/series/id={{series.id}}'>{{ series.name }}</a>
-	{% endfor %}
+	{% regroup results by first_char_group as series_letter_list %}
+	<section class="list-page-content pure-menu">
+		{% for prefix in series_letter_list %}
+		<p class="pure-menu-heading"><strong>{{ prefix.grouper }}</strong></p>
+		<ul class="pure-menu-list">
+			<hr/>
+			{% for series in prefix.list %}
+			<li class="pure-menu-item">
+				<a class="pure-menu-link" 
+				   href="/series/id={{series.id}}">{{ series.name }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endfor %}
+	</section>
 {% endblock %}

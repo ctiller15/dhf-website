@@ -7,7 +7,7 @@ class RelationForm(forms.Form):
     character_id = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
 class ReferenceForm(forms.Form):
-    title = forms.CharField(max_length=200)
+    title = forms.CharField(max_length=200, label=False)
 
 class CharacterCreationForm(forms.Form):
     CHOICES = (( 1, 'Yes'), ( 2, 'No'), ( 3,'Maybe'),)
