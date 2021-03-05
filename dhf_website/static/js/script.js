@@ -1,3 +1,21 @@
+document.addEventListener('keydown', (event) => {
+	if(event.code === 'Escape') {
+		removeAutocompleteElements();
+	}
+});
+
+document.addEventListener('click', (event) => {
+	removeAutocompleteElements();
+});
+
+const removeAutocompleteElements = () => {
+	const autocompleteItems = document.querySelectorAll('.autocomplete');
+	
+	autocompleteItems.forEach(autocompleteItem => {
+		autocompleteItem.remove();
+	});
+}
+
 // Code is very dry and repeated.
 // Look into consolidating into a few methods when time permits.
 const webPrefix = window.location.href.split('/').slice(0, 3).join('/');
@@ -27,7 +45,7 @@ const relationFormIdInput = relationForm[0].querySelector('#id_relations-form-0-
 // Dry. Fix later.
 relationFormInput.addEventListener('input', (e) => {handleKeypress(e.target.value, relationFormInput, relationFormIdInput, characterAutocompleteRequestUrl, 'character')});
 
-const createAutocompleteRow = (formField, formIdField, text, id) => {
+const createAutocompleteRow = (formField, formIdField, text, id, parentElement) => {
 	const newDiv = document.createElement("div");
 
 	const textContent = document.createTextNode(text);
@@ -36,6 +54,8 @@ const createAutocompleteRow = (formField, formIdField, text, id) => {
 	newDiv.addEventListener('click', (event) => {
 		formField.value = text;
 		formIdField.value = id;
+
+		parentElement.remove();
 	});
 
 	return newDiv;
@@ -53,6 +73,10 @@ function debounce (callback, wait) {
 
 
 const handleKeypress = debounce(async (str, inputElement, hiddenIdElement, requestUrl, type) => {
+	if(str.length === 0){
+		removeAutocompleteElements();
+		return;
+	}
 
 	const autocompleteRequest = `${requestUrl}${str}`;
 	
@@ -68,12 +92,13 @@ const handleKeypress = debounce(async (str, inputElement, hiddenIdElement, reque
 
 	// doing too many things. Break out into separate functions.
 	let autocompleteSuggest;
-	if(type === 'series') {
-		autocompleteSuggest = [...response.series].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id));
-	} else if (type === 'character') {
-		autocompleteSuggest = [...response.character].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id));
-	}
 	const autocompleteList = document.createElement('div');
+
+	if(type === 'series') {
+		autocompleteSuggest = [...response.series].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id, autocompleteList));
+	} else if (type === 'character') {
+		autocompleteSuggest = [...response.character].map(m => createAutocompleteRow(inputElement, hiddenIdElement, m.name, m.id, autocompleteList));
+	}
 	autocompleteList.classList.add('autocomplete');
 
 	autocompleteSuggest.forEach((item) => {
@@ -81,9 +106,8 @@ const handleKeypress = debounce(async (str, inputElement, hiddenIdElement, reque
 	});
 
 	// instead of clobbering the div entirely, just replace the content.
-	if(inputElement.nextSibling) {
-		inputElement.nextSibling.innerHTML = '';
-		inputElement.parentNode.insertBefore(autocompleteList, inputElement.nextSibling);
+	if(inputElement.nextSibling && inputElement.nextSibling.classList && inputElement.nextSibling.classList.contains('autocomplete')) {
+		inputElement.parentNode.replaceChild(autocompleteList, inputElement.nextSibling);
 	} else {
 		inputElement.parentNode.insertBefore(autocompleteList, inputElement.nextSibling);
 	}
