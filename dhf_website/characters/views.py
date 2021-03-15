@@ -213,11 +213,45 @@ def character_update(request):
 
         return render(request, 'character_update_page.html', context={ 'results': context })
     elif request.method == 'POST':
+        character_id = request.POST.get('character_id')
+
         RelationsFormSet = formset_factory(RelationForm)
         ReferencesFormSet = formset_factory(ReferenceForm)
 
-        character_creation_form = CharacterCreationForm(request.POST)
-        relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
-        references_formset = ReferencesFormSet(request.POST, prefix='references-form')
+        character_creation_form = CharacterCreationForm(request.POST, request.FILES)
 
-        # and save the updated form data.
+        if character_creation_form.is_valid():
+            cleaned_character = character_creation_form.cleaned_data
+
+            if cleaned_character['character_series_id']:
+                char_series, created = Series.objects.get_or_create(id=cleaned_character['character_series_id'])
+                if created:
+                    char_series.name = cleaned_character['character_series']
+                    char_series.save()
+            else:
+                char_series, created = Series.objects.get_or_create(name=cleaned_character['character_series'])
+
+            found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
+
+            # Updating the character
+            character_to_update = Character.objects.filter(id=character_id).update(
+                name=cleaned_character['character_name'],
+                summary=cleaned_character['summary'],
+                thumbnail=cleaned_character['thumbnail'],
+                series=char_series,
+                f_status=found_f_status
+            )
+            #character_to_update.update(name=cleaned_character['name'])
+
+            relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
+            references_formset = ReferencesFormSet(request.POST, prefix='references-form')
+
+            # and save the updated form data.
+            # Save character
+
+            # upsert relations
+            # Find any combination of the relations
+            # upsert references
+
+            # redirect
+            return redirect(f'/characters/char-id-{character_id}/')

@@ -71,6 +71,72 @@ class CharacterBrowserTests(TestCase):
         for character in characters:
             self.assertIn(character.name, response_str)
 
+class CharacterUpdateTests(TestCase):
+    fixtures = ['f_status.json', 'users.json']
+
+    def setUp(self):
+        self.client = Client()
+
+        self.created_character = {
+            'character_name': 'Rose Quartz',
+            'f_status': 1,
+            'character_series': 'Steven Universe',
+            'summary': 'Stevens late mom, former leader of the crystal gems',
+            'relations-form-TOTAL_FORMS': 1,
+            'relations-form-INITIAL_FORMS': 0,
+            'relations-form-0-character_name': 'Greg Universe',
+            'relations-form-0-summary': 'Greg worked the ol universe charm',
+            'references-form-TOTAL_FORMS': 1,
+            'references-form-INITIAL_FORMS': 0,
+            'references-form-0-title': 'ref1'
+        }
+
+        self.updated_character = {
+            'character_name': 'Rose Quartz',
+            'f_status': 1,
+            'character_id': 4,
+            'character_series': 'Steven Universe',
+            'character_series_id': 1,
+            'summary': 'Stevens late mom, former leader of the crystal gems',
+            'relations-form-TOTAL_FORMS': 2,
+            'relations-form-INITIAL_FORMS': 0,
+            'relations-form-0-character_name': 'Greg Universe',
+            'relations-form-0-summary': 'Greg worked the ol universe charm',
+            'relations-form-1-character_name': 'Pearl',
+            'relations-form-1-summary': 'It is not directly confirmed but heavily implied that Pearl and Rose were an item until Greg came along and smashed all of her hopes and dreams.',
+            'references-form-TOTAL_FORMS': 1,
+            'references-form-INITIAL_FORMS': 0,
+            'references-form-0-title': 'ref1'
+        }
+
+    def test_character_page_does_not_update_data_if_not_logged_in(self):
+
+        response = self.client.post(f'/characters/create/', self.created_character)
+        self.assertEqual(response.status_code, 302)
+
+    def test_character_update_page_does_save_data_if_logged_in(self):
+
+        self.client.login(username='charcreationuser', password='dummyp@ss123')
+
+        response = self.client.post(f'/characters/create/', self.created_character, follow=True)
+        saved_character = Character.objects.get(name__iexact=self.created_character['character_name'])
+        print(saved_character.id)
+        self.assertEqual(response.status_code, 200)
+
+        #response_str = str(response.content)
+        # then update.
+        updated_response = self.client.post(f'/characters/update/', self.updated_character, follow=True)
+        updated_response_str = str(updated_response.content)
+        self.assertIn(self.updated_character['character_name'], updated_response_str)
+        self.assertIn(self.updated_character['character_series'], updated_response_str)
+        self.assertIn(self.updated_character['summary'], updated_response_str)
+        self.assertIn(self.updated_character['relations-form-0-character_name'], updated_response_str)
+        self.assertIn(self.updated_character['relations-form-0-summary'], updated_response_str)
+        self.assertIn(self.updated_character['relations-form-1-character_name'], updated_response_str)
+        self.assertIn(self.updated_character['relations-form-1-summary'], updated_response_str)
+        self.assertIn(self.updated_character['references-form-0-title'], updated_response_str)
+        raise Exception('Finish the test!')
+
 class CharacterCreationTests(TestCase):
     fixtures = ['f_status.json', 'users.json']
 
@@ -172,8 +238,8 @@ class CharacterCreationTests(TestCase):
 
     def test_character_page_does_not_save_data_if_not_logged_in(self):
 
-        response = self.client.post(f'/characters/{self.character_data["character_name"]}/', self.character_data)
-        self.assertContains(response, 'Unauthorized', status_code=401)
+        response = self.client.post(f'/characters/create/', self.character_data)
+        self.assertEqual(response.status_code, 302)
 
     def test_character_page_does_save_data_if_logged_in(self):
 
