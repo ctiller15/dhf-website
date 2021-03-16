@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import F, Q
 from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
 from characters.models import Character, CharacterRelation, CharacterReference, F_Status, Series, CharacterReference
@@ -219,6 +219,7 @@ def character_update(request):
         ReferencesFormSet = formset_factory(ReferenceForm)
 
         character_creation_form = CharacterCreationForm(request.POST, request.FILES)
+        #print(character_creation_form.is_multipart())
 
         if character_creation_form.is_valid():
             cleaned_character = character_creation_form.cleaned_data
@@ -233,18 +234,62 @@ def character_update(request):
 
             found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
 
-            # Updating the character
-            character_to_update = Character.objects.filter(id=character_id).update(
-                name=cleaned_character['character_name'],
-                summary=cleaned_character['summary'],
-                thumbnail=cleaned_character['thumbnail'],
-                series=char_series,
-                f_status=found_f_status
-            )
+            character_to_update = Character.objects.get(id=character_id)
+
+            character_to_update.name = cleaned_character['character_name']
+            character_to_update.summary = cleaned_character['summary']
+            character_to_update.series = char_series
+            character_to_update.f_status = found_f_status
+            character_to_update.thumbnail = cleaned_character['thumbnail']
+            character_to_update.save()
             #character_to_update.update(name=cleaned_character['name'])
 
             relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
+            # find all of the new relations.
+            relations = ( CharacterRelation.objects \
+                .filter(character_1__id=character_id) \
+                .values('relation_summary', character_name=F('character_2__name'), character_id=F('character_2__id')) ) \
+                .union(CharacterRelation.objects \
+               .filter(character_2__id=character_id) \
+               .values('relation_summary', character_name=F('character_1__name'), character_id=F('character_1__id')))
+
+            character_ids = [rel['character_id'] for rel in relations]
+
+            character_names = [rel['character_name'] for rel in relations]
+
+            # Update the old relations.
+            for relation in relations_formset.cleaned_data:
+                if relation['character_id'] in character_ids:
+                    updated_relation = CharacterRelation.objects.filter(Q(character_2__id=relation['character_id'], character_1__id=character_id) | Q(character_2__id=character_id, character_1__id=relation['character_id'])).first()
+                    updated_relation.summary = relation['summary']
+                    updated_relation.save()
+                    #print(relation)
+                # get all ids that aren't the current character id.
+                elif relation['character_name'] in character_names:
+                    updated_relation = CharacterRelation.objects.filter(Q(character_2__name=relation['character_name'], character_1__id=character_id) | Q(character_2__id=character_id, character_1__name=relation['character_name'])).first()
+                    updated_relation.summary = relation['summary']
+                    updated_relation.save()
+                else:
+                    # Create the character.
+                    found_f_status=F_Status.objects.get(name="yes")
+                    old_character = Character.objects.get(id=character_id)
+                    character = Character.objects.create(name=relation['character_name'], f_status=found_f_status)
+                    new_relation = CharacterRelation.objects.create(character_1=old_character, character_2=character, relation_summary=relation['summary'])
+                    # Create the relation.
+
+            # For every relation NOT in the set, set it to hidden.
+
+            # Save the new relations.
             references_formset = ReferencesFormSet(request.POST, prefix='references-form')
+
+            print(references_formset.cleaned_data)
+
+            references = CharacterReference.objects \
+                .filter(character=character['id']) \
+                .values('text')
+
+            # if title not in references, add it to set of refrences.
+
 
             # and save the updated form data.
             # Save character
