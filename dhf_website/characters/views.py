@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from characters.forms import CharacterCreationForm, ReferenceForm, RelationForm
 from django.forms import formset_factory
 from django.conf import settings
+from characters.handlers.character_creation_page_handler import handle_character_creation
+from characters.handlers.character_page_handler import handle_character_page
 
 def calculate_f_status_text(input_text):
     statuses = {
@@ -19,121 +21,12 @@ def calculate_f_status_text(input_text):
 
 @login_required
 def character_creation_page(request):
-    RelationsFormSet = formset_factory(RelationForm)
-    ReferencesFormSet = formset_factory(ReferenceForm)
-    if request.method == 'GET':
-        form = CharacterCreationForm()
-
-        context = {
-            'form': form,
-            'relations_form': RelationsFormSet(prefix='relations-form'),
-            'references_form': ReferencesFormSet(prefix='references-form'),
-        }
-
-        return render(request, 'character_creation_page.html', context=context)
-    elif request.method == 'POST':
-
-        character_creation_form = CharacterCreationForm(request.POST, request.FILES)
-        relations_formset = RelationsFormSet(request.POST, prefix='relations-form')
-        references_formset = ReferencesFormSet(request.POST, prefix='references-form')
-            
-        if(request.user.is_authenticated and character_creation_form.is_valid()):
-
-            cleaned_character = character_creation_form.cleaned_data
-            
-            if cleaned_character['character_series_id']:
-                char_series, created = Series.objects.get_or_create(id=cleaned_character['character_series_id'])
-                if created:
-                    char_series.name = cleaned_character['character_series']
-            else:
-                char_series, created = Series.objects.get_or_create(name=cleaned_character['character_series'])
-
-            found_f_status=F_Status.objects.get(id=cleaned_character['f_status'])
-
-            new_character = Character.objects.create(
-                name=cleaned_character['character_name'],
-                summary=cleaned_character['summary'],
-                thumbnail=cleaned_character['thumbnail'],
-                f_status=found_f_status,
-                series=char_series,
-            )
-
-            cleaned_relations = [rel for rel in relations_formset.cleaned_data if rel]
-            cleaned_references = [ref for ref in references_formset.cleaned_data if ref]
-
-            for relation in cleaned_relations:
-                if 'character_id' in relation and relation['character_id'] is not None:
-                    char_relation = Character.objects.get(id=relation['character_id']) 
-                elif 'character_name' in relation:
-                    char_relation = Character.objects.create(
-                        name=relation['character_name'],
-                        f_status=found_f_status,
-                        series=char_series,
-                    )
-
-                relation_obj = CharacterRelation.objects.create(character_1=new_character, character_2=char_relation, relation_summary=relation['summary'])
-
-            for reference in cleaned_references:
-                CharacterReference.objects.create(character=new_character, text=reference['title'])
-
-            return redirect(f'/characters/char-id-{new_character.id}/')
-
-        else:
-            # convert to a class override?
-            # Or simply redirect to the login page.
-            return HttpResponse('Unauthorized', status=401)
+    response = handle_character_creation(request)
+    return response
 
 def character_page(request, character_name=None, character_id=None):
-    if request.method == 'GET':
-
-        character = None
-
-        if character_name:
-            character = Character.objects \
-                .filter(name__iexact=character_name) \
-                .values('id', 'thumbnail', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
-                .first()
-        elif character_id:
-            character = Character.objects \
-                .filter(id=character_id) \
-                .values('id', 'thumbnail', 'name', 'f_status__name', 'series__name', 'series__id', 'summary') \
-                .first()
-
-        relations = ( CharacterRelation.objects \
-            .filter(character_1__id=character['id']) \
-            .values('relation_summary', character_name=F('character_2__name'), character_id=F('character_2__id') ) \
-            .union(CharacterRelation.objects \
-           .filter(character_2__id=character['id']) \
-                   .values('relation_summary', character_name=F('character_1__name'), character_id=F('character_1__id'))))
-
-        references = CharacterReference.objects \
-            .filter(character=character['id']) \
-            .values('text')
-
-        context = {
-            'name': character['name'],
-            'id': character['id'],
-            'thumbnail': request.build_absolute_uri('/').strip("/") + settings.MEDIA_URL + str(character['thumbnail']),
-            'f_status_text': calculate_f_status_text(character['f_status__name']),
-            'f_status': character['f_status__name'],
-            'series': character['series__name'],
-            'series_id': character['series__id'],
-            'summary': character['summary'],
-            'relations': relations,
-            'references': references,
-        }
-
-        return render(request, 'character_page.html', context={ 'results': context})
-
-    elif request.method == 'POST':
-
-        if(request.user.is_authenticated):
-            return HttpResponse('Success', status=200)
-
-        else:
-            # convert to a class override?
-            # Or simply redirect to the login page.
-            return HttpResponse('Unauthorized', status=401)
+    response = handle_character_page(request, character_name, character_id)
+    return response
 
 def character_list(request):
     if request.method == 'GET':
@@ -282,10 +175,8 @@ def character_update(request):
             # Save the new relations.
             references_formset = ReferencesFormSet(request.POST, prefix='references-form')
 
-            print(references_formset.cleaned_data)
-
             references = CharacterReference.objects \
-                .filter(character=character['id']) \
+                .filter(character=character_to_update) \
                 .values('text')
 
             # if title not in references, add it to set of refrences.

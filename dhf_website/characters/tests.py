@@ -120,11 +120,8 @@ class CharacterUpdateTests(TestCase):
 
         response = self.client.post(f'/characters/create/', self.created_character, follow=True)
         saved_character = Character.objects.get(name__iexact=self.created_character['character_name'])
-        print(saved_character.id)
         self.assertEqual(response.status_code, 200)
 
-        #response_str = str(response.content)
-        # then update.
         updated_response = self.client.post(f'/characters/update/', self.updated_character, follow=True)
         updated_response_str = str(updated_response.content)
         self.assertIn(self.updated_character['character_name'], updated_response_str)
@@ -135,7 +132,6 @@ class CharacterUpdateTests(TestCase):
         self.assertIn(self.updated_character['relations-form-1-character_name'], updated_response_str)
         self.assertIn(self.updated_character['relations-form-1-summary'], updated_response_str)
         self.assertIn(self.updated_character['references-form-0-title'], updated_response_str)
-        raise Exception('Finish the test!')
 
 class CharacterCreationTests(TestCase):
     fixtures = ['f_status.json', 'users.json']
