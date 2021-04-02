@@ -83,7 +83,6 @@ def handle_character_update(request):
         ReferencesFormSet = formset_factory(ReferenceForm)
 
         character_creation_form = CharacterCreationForm(request.POST, request.FILES)
-        #print(character_creation_form.is_multipart())
 
         if character_creation_form.is_valid():
             cleaned_character = character_creation_form.cleaned_data
@@ -139,26 +138,30 @@ def handle_character_update(request):
                     old_character = Character.objects.get(id=character_id)
                     character = Character.objects.create(name=relation['character_name'], f_status=found_f_status)
                     new_relation = CharacterRelation.objects.create(character_1=old_character, character_2=character, relation_summary=relation['summary'])
-                    # Create the relation.
 
-            # For every relation NOT in the set, set it to hidden.
-
-            # Save the new relations.
+            # Handling references.
             references_formset = ReferencesFormSet(request.POST, prefix='references-form')
 
             references = CharacterReference.objects \
                 .filter(character=character_to_update) \
-                .values('text')
+                .values('id', 'text')
 
-            # if title not in references, add it to set of refrences.
-
-
-            # and save the updated form data.
-            # Save character
-
-            # upsert relations
-            # Find any combination of the relations
-            # upsert references
+            if len(references_formset.cleaned_data) > len(references):
+                for i in range(len(references_formset.cleaned_data)):
+                    if i < len(references):
+                        updated_reference = CharacterReference.objects.get(id=references[i]['id'])
+                        updated_reference.text = references_formset.cleaned_data[i]['title']
+                        updated_reference.save()
+                    else:
+                        CharacterReference.objects.create(character=character_to_update, text=references_formset.cleaned_data[i]['title'])
+            else:
+                for i in range(len(references)):
+                    if i < len(references_formset.cleaned_data):
+                        updated_reference = CharacterReference.objects.get(id=references[i]['id'])
+                        references[i]['text'] = references_formset.cleaned_data[i]['title']
+                        references[i].save()
+                    else:
+                        CharacterReference.objects.delete(id=references[i]['id'])
 
             # redirect
             return redirect(f'/characters/char-id-{character_id}/')

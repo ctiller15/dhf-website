@@ -104,9 +104,10 @@ class CharacterUpdateTests(TestCase):
             'relations-form-0-summary': 'Greg worked the ol universe charm',
             'relations-form-1-character_name': 'Pearl',
             'relations-form-1-summary': 'It is not directly confirmed but heavily implied that Pearl and Rose were an item until Greg came along and smashed all of her hopes and dreams.',
-            'references-form-TOTAL_FORMS': 1,
+            'references-form-TOTAL_FORMS': 2,
             'references-form-INITIAL_FORMS': 0,
-            'references-form-0-title': 'ref1'
+            'references-form-0-title': 'ref1',
+            'references-form-1-title': 'ref2'
         }
 
     def test_character_page_does_not_update_data_if_not_logged_in(self):
@@ -132,6 +133,7 @@ class CharacterUpdateTests(TestCase):
         self.assertIn(self.updated_character['relations-form-1-character_name'], updated_response_str)
         self.assertIn(self.updated_character['relations-form-1-summary'], updated_response_str)
         self.assertIn(self.updated_character['references-form-0-title'], updated_response_str)
+        self.assertIn(self.updated_character['references-form-1-title'], updated_response_str)
 
 class CharacterCreationTests(TestCase):
     fixtures = ['f_status.json', 'users.json']
